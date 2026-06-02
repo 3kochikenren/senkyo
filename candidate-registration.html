@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>候補者登録</title>
+    <meta name="description" content="候補者を選挙区ごとに登録する画面です。" />
+    <link rel="stylesheet" href="candidate-registration.css" />
+  </head>
+  <body>
+    <main class="candidate-shell">
+      <section class="candidate-card">
+        <header class="candidate-header">
+          <div>
+            <p class="eyebrow">Candidate Registration</p>
+            <h1>候補者一覧</h1>
+            <p class="lead">登録済み候補者を表示します。</p>
+          </div>
+          <a class="settings-back-btn" href="settings.html">設定へ戻る</a>
+        </header>
+
+        <section class="candidate-list-section">
+          <div class="list-actions">
+            <button id="openAddCandidateBtn" type="button">追加</button>
+          </div>
+          <div id="candidateList" class="candidate-list"></div>
+          <p id="candidateListNote" class="note hidden"></p>
+        </section>
+
+        <section id="candidateFormPanel" class="candidate-modal hidden" aria-hidden="true">
+          <button id="candidateModalBackdrop" class="candidate-modal-backdrop" type="button" aria-label="閉じる"></button>
+          <div class="candidate-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="candidatePanelTitle">
+            <h2 id="candidatePanelTitle">候補者を追加</h2>
+            <form id="candidateForm" class="candidate-form">
+              <label>
+                <span>選挙区</span>
+                <select id="candidateDistrictSelect">
+                  <option value="">選択してください</option>
+                </select>
+              </label>
+              <label>
+                <span>メンバー</span>
+                <select id="candidateMemberSelect">
+                  <option value="">選択してください</option>
+                </select>
+              </label>
+              <div class="actions">
+                <button id="saveCandidateBtn" type="submit">保存</button>
+                <button id="deleteCandidateBtn" class="danger hidden" type="button">削除</button>
+                <button id="cancelCandidateBtn" type="button">キャンセル</button>
+              </div>
+              <p id="candidateNote" class="note hidden"></p>
+            </form>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="candidate-registration.js"></script>
+  </body>
+</html>

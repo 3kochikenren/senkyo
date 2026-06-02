@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>選挙区登録</title>
+    <meta name="description" content="選挙区情報を登録する画面です。" />
+    <link rel="stylesheet" href="district-registration.css" />
+  </head>
+  <body>
+    <main class="registration-shell">
+      <section class="registration-card">
+        <header class="registration-header">
+          <div>
+            <p class="eyebrow">District Registration</p>
+            <h1>選挙区一覧</h1>
+            <p class="lead">告示日順（降順）で表示します。</p>
+          </div>
+          <a class="settings-back-btn" href="settings.html">設定へ戻る</a>
+        </header>
+
+        <section class="district-list-section">
+          <div class="list-actions">
+            <button id="openRegistrationBtn" type="button">追加</button>
+          </div>
+          <div id="districtList" class="district-list"></div>
+          <p id="districtListNote" class="registration-note hidden"></p>
+        </section>
+
+        <section id="registrationPanel" class="registration-panel hidden">
+          <h2 id="panelTitle">選挙区を追加</h2>
+          <form id="districtRegistrationForm" class="registration-form">
+            <label>
+              <span>選挙区名</span>
+              <input id="districtNameInput" type="text" placeholder="秋市" />
+            </label>
+            <label>
+              <span>告示日</span>
+              <input id="notificationDateInput" type="date" />
+            </label>
+            <label>
+              <span>投票日</span>
+              <input id="votingDateInput" type="date" />
+            </label>
+            <label>
+              <span>期日前</span>
+              <input id="earlyVotingInput" type="text" placeholder="2026-07-12〜2026-07-18" />
+            </label>
+            <label>
+              <span>定数</span>
+              <input id="seatsInput" type="number" min="0" step="1" placeholder="30" />
+            </label>
+            <div id="createActions" class="actions">
+              <button id="registerBtn" type="button">登録</button>
+              <button id="cancelRegistrationBtn" type="button">キャンセル</button>
+            </div>
+            <div id="editActions" class="actions hidden">
+              <button id="saveBtn" type="button">保存</button>
+              <button id="deleteBtn" type="button">削除</button>
+            </div>
+            <p id="registrationNote" class="registration-note hidden"></p>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="district-registration.js"></script>
+  </body>
+</html>

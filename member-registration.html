@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>メンバー登録</title>
+    <meta name="description" content="メンバー情報を登録する画面です。" />
+    <link rel="stylesheet" href="member-registration.css" />
+  </head>
+  <body>
+    <main class="member-shell">
+      <section class="member-card">
+        <header class="member-header">
+          <div>
+            <p class="eyebrow">Member Registration</p>
+            <h1>メンバー一覧</h1>
+            <p class="lead">登録済みメンバーを表示します。</p>
+          </div>
+          <a class="settings-back-btn" href="settings.html">設定へ戻る</a>
+        </header>
+
+        <section class="member-list-section">
+          <div class="list-actions">
+            <button id="openAddMemberBtn" type="button">追加</button>
+          </div>
+          <div id="memberList" class="member-list"></div>
+          <p id="memberListNote" class="note hidden"></p>
+        </section>
+
+        <section id="memberFormPanel" class="member-modal hidden" aria-hidden="true">
+          <button id="memberModalBackdrop" class="member-modal-backdrop" type="button" aria-label="閉じる"></button>
+          <div class="member-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="memberPanelTitle">
+            <h2 id="memberPanelTitle">メンバーを追加</h2>
+            <form id="memberForm" class="member-form">
+              <label>
+                <span>名前</span>
+                <input id="memberNameInput" type="text" placeholder="山田 太郎" />
+              </label>
+              <label>
+                <span>住所</span>
+                <input id="memberAddressInput" type="text" placeholder="東京都◯◯区◯◯1-2-3" />
+              </label>
+              <label>
+                <span>携帯番号</span>
+                <input id="memberMobileInput" type="text" placeholder="090-1234-5678" />
+              </label>
+              <label>
+                <span>メールアドレス</span>
+                <input id="memberEmailInput" type="email" placeholder="example@example.jp" />
+              </label>
+              <label>
+                <span>LINE ID</span>
+                <input id="memberLineIdInput" type="text" placeholder="line_id_example" />
+              </label>
+              <label>
+                <span>写真</span>
+                <input id="memberPhotoInput" type="file" accept="image/*" />
+              </label>
+              <div id="memberPhotoPreview" class="member-photo-preview hidden">
+                <img id="memberPhotoPreviewImage" alt="メンバー写真プレビュー" />
+              </div>
+              <div class="actions">
+                <button id="saveMemberBtn" type="submit">保存</button>
+                <button id="deleteMemberBtn" class="danger hidden" type="button">削除</button>
+                <button id="cancelMemberBtn" type="button">キャンセル</button>
+              </div>
+              <p id="memberNote" class="note hidden"></p>
+            </form>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="member-registration.js"></script>
+  </body>
+</html>

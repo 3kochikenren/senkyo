@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>選挙対策管理ダッシュボード</title>
+    <meta
+      name="description"
+      content="選挙対策本部、候補者、ボランティア、行動計画をまとめて管理する静的ダッシュボードです。"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero card">
+        <div class="hero-header">
+          <div class="hero-copy">
+            <p class="eyebrow">Election Control Center</p>
+            <h1>選挙対策本部ポータル</h1>
+          </div>
+          <a class="header-settings-btn" href="settings.html" target="_blank" rel="noopener noreferrer">設定</a>
+        </div>
+      </section>
+
+      <section class="district-card card">
+        <div class="district-card-copy">
+          <h2 class="district-title-line">
+            <span id="districtName">秋市</span>
+            <span id="electionType">市議会議員選挙</span>
+          </h2>
+          <p id="electionDate">投票予定日 2026-07-19</p>
+        </div>
+
+        <div class="district-portrait-wrap">
+          <div class="days-card">
+            <div class="days-badge">
+              <p class="district-caption">告示日まであと</p>
+              <span id="daysLeft">47</span>
+            </div>
+          </div>
+          <div id="districtPortrait" class="district-portrait amber" aria-hidden="true">
+            <img id="districtPortraitImage" class="district-portrait-image hidden" alt="候補者写真" />
+            <div class="portrait-hair"></div>
+            <div class="portrait-face"></div>
+            <div class="portrait-shoulders"></div>
+          </div>
+          <p id="districtCandidateName" class="district-candidate-name">候補者 未設定</p>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <article class="stat card"><span>ポスティング件数</span><strong id="postingCount">1240</strong></article>
+        <article class="stat card"><span>挨拶件数</span><strong id="greetingCount">860</strong></article>
+        <article class="stat card"><span>ポスター件数</span><strong id="posterCount">318</strong></article>
+      </section>
+
+      <section class="workspace">
+        <aside class="card sidebar">
+          <div>
+            <p class="eyebrow">本部一覧</p>
+            <h2>切り替え対象</h2>
+          </div>
+          <div id="campaignList" class="campaign-list"></div>
+        </aside>
+
+        <section class="card content">
+          <div class="content-header">
+            <div>
+              <p class="eyebrow">候補者</p>
+              <h2 id="headquartersName">秋市議会対策本部</h2>
+              <p id="campaignSummary" class="summary"></p>
+            </div>
+            <button id="togglePlanBtn" class="secondary-btn" type="button">行動計画を表示</button>
+          </div>
+
+          <div class="content-grid">
+            <div id="candidateArea"></div>
+
+            <div class="side-actions">
+              <button id="toggleVolunteerBtn" class="primary-btn volunteer-btn" type="button">
+                <span>Volunteer</span>
+                <strong>ボランティア応募</strong>
+                <small>名前、連絡先、参加可能日、時間、参加できる作業を登録します。</small>
+              </button>
+
+              <button id="toggleMemberBtn" class="primary-btn member-btn" type="button">
+                <span>Member</span>
+                <strong>メンバー登録</strong>
+                <small>名前、住所、携帯番号、メールアドレス、LINE ID を登録します。</small>
+              </button>
+
+              <button id="toggleDistrictMasterBtn" class="primary-btn district-master-btn" type="button">
+                <span>Master</span>
+                <strong>選挙区マスター登録</strong>
+                <small>選挙区名、告示日、投票日、期日前、定数を登録します。</small>
+              </button>
+
+              <article class="mini-card card">
+                <p class="eyebrow">候補者数</p>
+                <strong id="candidateCount">4</strong>
+                <span>4人以上は顔写真と地区名を先に見せます。</span>
+              </article>
+            </div>
+          </div>
+
+          <section id="volunteerPanel" class="panel hidden">
+            <form id="volunteerForm" class="form card">
+              <div class="form-head">
+                <div>
+                  <p class="eyebrow">応募フォーム</p>
+                  <h3>参加情報を登録</h3>
+                </div>
+                <button id="closeVolunteerBtn" type="button" class="ghost-btn">閉じる</button>
+              </div>
+
+              <div class="form-grid">
+                <label>
+                  <span>名前</span>
+                  <input id="volunteerName" type="text" placeholder="山田 太郎" />
+                </label>
+                <label>
+                  <span>連絡先</span>
+                  <input id="volunteerContact" type="text" placeholder="080-1234-5678 / example@example.jp" />
+                </label>
+              </div>
+
+              <div class="choice-group">
+                <span class="group-label">参加できる作業</span>
+                <div id="skillsGroup" class="chip-row"></div>
+              </div>
+
+              <div class="double-grid">
+                <div class="choice-group">
+                  <span class="group-label">参加できる日にち</span>
+                  <div id="daysGroup" class="chip-grid"></div>
+                </div>
+                <div class="choice-group">
+                  <span class="group-label">参加できる時間</span>
+                  <div id="timesGroup" class="chip-grid times"></div>
+                </div>
+              </div>
+
+              <div class="submit-row">
+                <button class="primary-btn" type="submit">保存して本部へ報告</button>
+                <p>選択情報は画面内に保存され、報告用一覧に追加されます。</p>
+              </div>
+
+              <p id="submissionNote" class="note hidden"></p>
+            </form>
+
+            <div class="aside-stack">
+              <article class="card report-card">
+                <p class="eyebrow">最近の応募</p>
+                <div id="recentApplications" class="recent-list">
+                  <p class="empty">まだ応募はありません。</p>
+                </div>
+              </article>
+
+              <article class="card report-card">
+                <p class="eyebrow">最近のメンバー</p>
+                <div id="recentMembers" class="recent-list">
+                  <p class="empty">まだ登録はありません。</p>
+                </div>
+              </article>
+
+              <article class="card report-card">
+                <p class="eyebrow">最近の選挙区マスター</p>
+                <div id="recentDistrictMasters" class="recent-list">
+                  <p class="empty">まだ登録はありません。</p>
+                </div>
+              </article>
+
+              <article class="card report-card">
+                <p class="eyebrow">本部への報告メモ</p>
+                <p>
+                  応募情報は、ボランティアの種類・日付・時間帯ごとに整理して、本部の配車・配置・連絡に使う想定です。
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section id="planPanel" class="panel hidden">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">行動計画</p>
+                <h3>日にち・時間別スケジュール</h3>
+              </div>
+              <button id="closePlanBtn" type="button" class="ghost-btn">閉じる</button>
+            </div>
+            <div id="planGrid" class="plan-grid"></div>
+          </section>
+
+          <section id="memberPanel" class="member-modal hidden" aria-hidden="true">
+            <div class="member-modal-backdrop">
+              <form id="memberForm" class="form card member-form">
+                <div class="form-head">
+                  <div>
+                    <p class="eyebrow">メンバー登録</p>
+                    <h3>支援メンバー情報を登録</h3>
+                  </div>
+                  <button id="closeMemberBtn" type="button" class="ghost-btn">キャンセル</button>
+                </div>
+
+                <div class="form-grid member-grid">
+                  <label>
+                    <span>名前</span>
+                    <input id="memberName" type="text" placeholder="山田 太郎" />
+                  </label>
+                  <label>
+                    <span>住所</span>
+                    <input id="memberAddress" type="text" placeholder="東京都◯◯区◯◯1-2-3" />
+                  </label>
+                  <label>
+                    <span>携帯番号</span>
+                    <input id="memberMobile" type="text" placeholder="090-1234-5678" />
+                  </label>
+                  <label>
+                    <span>メールアドレス</span>
+                    <input id="memberEmail" type="email" placeholder="example@example.jp" />
+                  </label>
+                  <label>
+                    <span>LINE ID</span>
+                    <input id="memberLineId" type="text" placeholder="line_id_example" />
+                  </label>
+                </div>
+
+                <div class="submit-row">
+                  <button class="primary-btn member-submit" type="submit">保存</button>
+                  <p>メンバー情報は Supabase に保存され、後から名簿として使えます。</p>
+                </div>
+
+                <p id="memberNote" class="note hidden"></p>
+              </form>
+            </div>
+          </section>
+
+          <section id="districtMasterPanel" class="district-master-modal hidden" aria-hidden="true">
+            <div class="district-master-modal-backdrop">
+              <form id="districtMasterForm" class="form card district-master-form">
+                <div class="form-head">
+                  <div>
+                    <p class="eyebrow">選挙区マスター登録</p>
+                    <h3>選挙区情報を登録</h3>
+                  </div>
+                  <button id="closeDistrictMasterBtn" type="button" class="ghost-btn">キャンセル</button>
+                </div>
+
+                <div class="form-grid district-master-grid">
+                  <label>
+                    <span>選挙区名</span>
+                    <input id="masterDistrictName" type="text" placeholder="秋市" />
+                  </label>
+                  <label>
+                    <span>告示日</span>
+                    <input id="masterNotificationDate" type="date" />
+                  </label>
+                  <label>
+                    <span>投票日</span>
+                    <input id="masterVotingDate" type="date" />
+                  </label>
+                  <label>
+                    <span>期日前</span>
+                    <input id="masterEarlyVoting" type="text" placeholder="2026-07-12〜2026-07-18" />
+                  </label>
+                  <label>
+                    <span>定数</span>
+                    <input id="masterSeats" type="number" min="0" step="1" placeholder="30" />
+                  </label>
+                </div>
+
+                <div class="submit-row">
+                  <button class="primary-btn district-master-submit" type="submit">保存</button>
+                  <p>登録したデータは選挙区マスターテーブルへ保存されます。</p>
+                </div>
+
+                <p id="districtMasterNote" class="note hidden"></p>
+              </form>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

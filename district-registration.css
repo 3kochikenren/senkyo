@@ -1,0 +1,225 @@
+:root {
+  --bg: #f4ece1;
+  --text: #241d13;
+  --line: rgba(99, 75, 42, 0.24);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #fbf6ee 0%, var(--bg) 100%);
+}
+
+.registration-shell {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 26px 16px 40px;
+}
+
+.registration-card {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 16px 36px rgba(72, 54, 21, 0.08);
+  padding: 22px;
+}
+
+.registration-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #7b6a4d;
+}
+
+h1 {
+  margin: 8px 0 0;
+  font-size: clamp(1.6rem, 2.2vw, 2.4rem);
+}
+
+.lead {
+  margin: 10px 0 0;
+  color: #6b5e49;
+}
+
+.district-list-section {
+  margin-top: 18px;
+}
+
+.list-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.list-actions button,
+.settings-back-btn {
+  border: 1px solid #d8c6a7;
+  border-radius: 999px;
+  background: #f7e7ca;
+  color: #3d2f18;
+  font-weight: 700;
+  padding: 10px 16px;
+  text-decoration: none;
+}
+
+.list-actions button {
+  cursor: pointer;
+}
+
+.district-list-section h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.list-help {
+  margin: 6px 0 0;
+  font-size: 0.88rem;
+  color: #7a6a53;
+}
+
+.district-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.district-item {
+  border: 1px solid #e2d0b0;
+  border-radius: 12px;
+  background: #fff9ee;
+  padding: 10px 12px;
+}
+
+.district-item.clickable {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.district-item.clickable:hover {
+  border-color: #b98a46;
+  transform: translateY(-1px);
+}
+
+.district-item strong {
+  display: block;
+}
+
+.district-item span {
+  display: block;
+  margin-top: 4px;
+  color: #6b5d46;
+  font-size: 0.88rem;
+}
+
+.registration-panel {
+  margin-top: 18px;
+  border-top: 1px dashed #dcc9a9;
+  padding-top: 14px;
+}
+
+.registration-panel h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.registration-form {
+  margin-top: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.registration-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.registration-form span {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #4b3f2f;
+}
+
+.registration-form input {
+  width: 100%;
+  border: 1px solid #dcc9a9;
+  border-radius: 14px;
+  padding: 12px 14px;
+  outline: none;
+  background: #fffdfa;
+}
+
+.registration-form input:focus {
+  border-color: #b98a46;
+}
+
+.actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actions button,
+.actions a {
+  border: 1px solid #d8c6a7;
+  border-radius: 999px;
+  background: #f7e7ca;
+  color: #3d2f18;
+  font-weight: 700;
+  padding: 10px 16px;
+  text-decoration: none;
+}
+
+.actions button {
+  cursor: pointer;
+}
+
+#saveBtn {
+  background: #e7f6e7;
+  border-color: #9ccc9a;
+}
+
+#deleteBtn {
+  background: #fdeaea;
+  border-color: #ebb2b2;
+}
+
+.registration-note {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2d0b0;
+  background: #fff7e8;
+  color: #6a3e10;
+  font-size: 0.9rem;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .registration-header {
+    flex-direction: column;
+  }
+
+  .list-actions {
+    justify-content: flex-start;
+  }
+}

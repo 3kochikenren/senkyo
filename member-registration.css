@@ -1,0 +1,248 @@
+:root {
+  --bg: #f4ece1;
+  --text: #241d13;
+  --line: rgba(99, 75, 42, 0.24);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #fbf6ee 0%, var(--bg) 100%);
+}
+
+.member-shell {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 26px 16px 40px;
+}
+
+.member-card {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 16px 36px rgba(72, 54, 21, 0.08);
+  padding: 22px;
+}
+
+.member-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #7b6a4d;
+}
+
+h1 {
+  margin: 8px 0 0;
+  font-size: clamp(1.6rem, 2.2vw, 2.4rem);
+}
+
+.lead {
+  margin: 10px 0 0;
+  color: #6b5e49;
+}
+
+.settings-back-btn {
+  border: 1px solid #d8c6a7;
+  border-radius: 999px;
+  background: #f7e7ca;
+  color: #3d2f18;
+  font-weight: 700;
+  padding: 10px 16px;
+  text-decoration: none;
+}
+
+.member-list-section {
+  margin-top: 18px;
+}
+
+.list-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.list-actions button {
+  border: 1px solid #d8c6a7;
+  border-radius: 999px;
+  background: #f7e7ca;
+  color: #3d2f18;
+  font-weight: 700;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.member-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.member-item {
+  border: 1px solid #e2d0b0;
+  border-radius: 12px;
+  background: #fff9ee;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.member-item:hover {
+  transform: translateY(-1px);
+  border-color: #c8a672;
+  box-shadow: 0 10px 16px rgba(76, 58, 29, 0.08);
+}
+
+.member-item strong {
+  display: block;
+}
+
+.member-item span {
+  display: block;
+  margin-top: 4px;
+  color: #6b5d46;
+  font-size: 0.88rem;
+}
+
+.member-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+}
+
+.member-modal.hidden {
+  display: none;
+}
+
+.member-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(36, 29, 19, 0.5);
+  cursor: pointer;
+}
+
+.member-modal-dialog {
+  position: relative;
+  width: min(680px, calc(100vw - 24px));
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  border: 1px solid #e2d0b0;
+  border-radius: 18px;
+  background: #fff9ee;
+  padding: 16px;
+  box-shadow: 0 18px 40px rgba(45, 32, 13, 0.24);
+}
+
+.member-modal-dialog h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.member-form {
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.member-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.member-form span {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #4b3f2f;
+}
+
+.member-form input {
+  width: 100%;
+  border: 1px solid #dcc9a9;
+  border-radius: 14px;
+  padding: 12px 14px;
+  outline: none;
+  background: #fffdfa;
+}
+
+.member-form input:focus {
+  border-color: #b98a46;
+}
+
+.member-photo-preview {
+  border: 1px solid #e2d0b0;
+  border-radius: 14px;
+  background: #fffdfa;
+  padding: 10px;
+}
+
+.member-photo-preview img {
+  width: 100%;
+  max-width: 240px;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e2d0b0;
+}
+
+.actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actions button {
+  border: 1px solid #d8c6a7;
+  border-radius: 999px;
+  background: #f7e7ca;
+  color: #3d2f18;
+  font-weight: 700;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.actions button.danger {
+  border-color: #d9a8a8;
+  background: #f7dede;
+  color: #6b1b1b;
+}
+
+.note {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2d0b0;
+  background: #fff7e8;
+  color: #6a3e10;
+  font-size: 0.9rem;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .member-header {
+    flex-direction: column;
+  }
+
+  .list-actions {
+    justify-content: flex-start;
+  }
+}
