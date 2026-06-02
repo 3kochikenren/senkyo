@@ -507,7 +507,6 @@
                   <div id="postingBar" class="kpi-meter-bar posting"></div>
                 </div>
                 <p class="kpi-trend" id="postingTrend">稼働データを算出中</p>
-                <a id="openPostingInputBtn" class="kpi-action-link" href="posting-count-entry.html">件数を入力</a>
                 <p class="kpi-note">目標到達に向けた稼働状況</p>
               </article>
 
@@ -925,23 +924,6 @@
         renderAllKpis();
       })();
 
-      const postingLink = document.getElementById("openPostingInputBtn");
-      if (postingLink) {
-        const inputParams = new URLSearchParams({
-          districtName,
-          tileId,
-          candidateName,
-          date: votingDate !== "-" ? votingDate : "",
-          notificationDate: notificationDate !== "-" ? notificationDate : "",
-          votingDate: votingDate !== "-" ? votingDate : "",
-          electionType,
-          daysLeft,
-          candidatePhotoUrl,
-          greetingCount: String(currentMetrics.greeting),
-        });
-        postingLink.href = `posting-count-entry.html?${inputParams.toString()}`;
-      }
-
       const buildRegisterParams = () =>
         new URLSearchParams({
           districtName,
@@ -970,11 +952,7 @@
 
       document.querySelectorAll(".kpi-card.clickable[data-register-kind]").forEach((card) => {
         const kind = card.getAttribute("data-register-kind") || "posting";
-        card.addEventListener("click", (event) => {
-          const target = event.target;
-          if (target instanceof HTMLElement && target.closest("a")) {
-            return;
-          }
+        card.addEventListener("click", () => {
           openRegisterPage(kind);
         });
 
