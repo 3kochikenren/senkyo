@@ -241,7 +241,6 @@ const els = {
   districtCandidateName: document.getElementById("districtCandidateName"),
   postingCount: document.getElementById("postingCount"),
   greetingCount: document.getElementById("greetingCount"),
-  posterCount: document.getElementById("posterCount"),
   campaignList: document.getElementById("campaignList"),
   headquartersName: document.getElementById("headquartersName"),
   campaignSummary: document.getElementById("campaignSummary"),
@@ -251,6 +250,8 @@ const els = {
   planPanel: document.getElementById("planPanel"),
   planGrid: document.getElementById("planGrid"),
   toggleVolunteerBtn: document.getElementById("toggleVolunteerBtn"),
+  districtVolunteerBtn: document.getElementById("districtVolunteerBtn"),
+  districtOrgChartBtn: document.getElementById("districtOrgChartBtn"),
   closeVolunteerBtn: document.getElementById("closeVolunteerBtn"),
   togglePlanBtn: document.getElementById("togglePlanBtn"),
   closePlanBtn: document.getElementById("closePlanBtn"),
@@ -692,7 +693,6 @@ function updateView(syncForm = true) {
   els.districtCandidateName.textContent = tile.candidateName;
   els.postingCount.textContent = String(campaign.postingCount);
   els.greetingCount.textContent = String(campaign.greetingCount);
-  els.posterCount.textContent = String(campaign.posterCount);
   els.headquartersName.textContent = campaign.headquarters;
   els.campaignSummary.textContent = campaign.candidateSummary;
   els.candidateCount.textContent = String(campaign.candidates.length);
@@ -747,6 +747,20 @@ els.toggleVolunteerBtn.addEventListener("click", () => {
   state.volunteerOpen = !state.volunteerOpen;
   updateView();
 });
+
+if (els.districtVolunteerBtn) {
+  els.districtVolunteerBtn.addEventListener("click", () => {
+    state.volunteerOpen = true;
+    updateView();
+    els.volunteerPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+if (els.districtOrgChartBtn) {
+  els.districtOrgChartBtn.addEventListener("click", () => {
+    window.alert("組織図はこれから追加します。設定画面から項目を整備できます。");
+  });
+}
 
 els.closeVolunteerBtn.addEventListener("click", () => {
   state.volunteerOpen = false;

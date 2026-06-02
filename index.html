@@ -23,35 +23,49 @@
       </section>
 
       <section class="district-card card">
-        <div class="district-card-copy">
-          <h2 class="district-title-line">
-            <span id="districtName">秋市</span>
-            <span id="electionType">市議会議員選挙</span>
-          </h2>
-          <p id="electionDate">投票予定日 2026-07-19</p>
-        </div>
+        <div class="district-layout">
+          <div>
+            <div class="district-card-copy">
+              <h2 class="district-title-line">
+                <span id="districtName">秋市</span>
+                <span id="electionType">市議会議員選挙</span>
+              </h2>
+              <p id="electionDate">投票予定日 2026-07-19</p>
+            </div>
 
-        <div class="district-portrait-wrap">
-          <div class="days-card">
-            <div class="days-badge">
-              <p class="district-caption">告示日まであと</p>
-              <span id="daysLeft">47</span>
+            <div class="district-portrait-wrap">
+              <div class="days-card">
+                <div class="days-badge">
+                  <p class="district-caption">告示日まであと</p>
+                  <span id="daysLeft">47</span>
+                </div>
+              </div>
+              <div id="districtPortrait" class="district-portrait amber" aria-hidden="true">
+                <img id="districtPortraitImage" class="district-portrait-image hidden" alt="候補者写真" />
+                <div class="portrait-hair"></div>
+                <div class="portrait-face"></div>
+                <div class="portrait-shoulders"></div>
+              </div>
+              <p id="districtCandidateName" class="district-candidate-name">候補者 未設定</p>
             </div>
           </div>
-          <div id="districtPortrait" class="district-portrait amber" aria-hidden="true">
-            <img id="districtPortraitImage" class="district-portrait-image hidden" alt="候補者写真" />
-            <div class="portrait-hair"></div>
-            <div class="portrait-face"></div>
-            <div class="portrait-shoulders"></div>
-          </div>
-          <p id="districtCandidateName" class="district-candidate-name">候補者 未設定</p>
-        </div>
-      </section>
 
-      <section class="stats-grid">
-        <article class="stat card"><span>ポスティング件数</span><strong id="postingCount">1240</strong></article>
-        <article class="stat card"><span>挨拶件数</span><strong id="greetingCount">860</strong></article>
-        <article class="stat card"><span>ポスター件数</span><strong id="posterCount">318</strong></article>
+          <div class="district-side-col">
+            <article class="district-mini-tile">
+              <p>ポスティング</p>
+              <strong id="postingCount">1240</strong>
+            </article>
+            <article class="district-mini-tile">
+              <p>挨拶</p>
+              <strong id="greetingCount">860</strong>
+            </article>
+          </div>
+
+          <div class="district-side-col">
+            <button id="districtVolunteerBtn" class="district-action-btn" type="button">ボランティア</button>
+            <button id="districtOrgChartBtn" class="district-action-btn" type="button">組織図</button>
+          </div>
+        </div>
       </section>
 
       <section class="workspace">
