@@ -102,8 +102,18 @@ const state = {
     earlyVoting: "",
     seats: "",
   },
-  upcomingElectionTile: null,
+  upcomingElectionTiles: [],
+  selectedDistrictTileId: null,
 };
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
 
 function startOfToday() {
   const date = new Date();
@@ -142,15 +152,18 @@ function calcDaysLeftToNotification(notificationDate) {
   return Math.max(diff, 0);
 }
 
-function getFallbackTile(campaign, selectedCandidate) {
-  return {
-    districtName: campaign.district,
-    electionType: campaign.electionType,
-    votingDate: campaign.electionDate,
-    daysLeft: campaign.daysLeft,
-    candidateName: selectedCandidate?.name ?? "候補者 未設定",
-    candidatePhotoUrl: "",
-  };
+function getFallbackTiles(campaign, selectedCandidate) {
+  return [
+    {
+      id: campaign.id,
+      districtName: campaign.district,
+      electionType: campaign.electionType,
+      votingDate: campaign.electionDate,
+      daysLeft: campaign.daysLeft,
+      candidateName: selectedCandidate?.name ?? "候補者 未設定",
+      candidatePhotoUrl: "",
+    },
+  ];
 }
 
 function toSubmission(entry) {
@@ -232,15 +245,7 @@ function resetDistrictMasterForm() {
 }
 
 const els = {
-  daysLeft: document.getElementById("daysLeft"),
-  districtName: document.getElementById("districtName"),
-  electionType: document.getElementById("electionType"),
-  electionDate: document.getElementById("electionDate"),
-  districtPortrait: document.getElementById("districtPortrait"),
-  districtPortraitImage: document.getElementById("districtPortraitImage"),
-  districtCandidateName: document.getElementById("districtCandidateName"),
-  postingCount: document.getElementById("postingCount"),
-  greetingCount: document.getElementById("greetingCount"),
+  districtGroupList: document.getElementById("districtGroupList"),
   campaignList: document.getElementById("campaignList"),
   headquartersName: document.getElementById("headquartersName"),
   campaignSummary: document.getElementById("campaignSummary"),
@@ -250,8 +255,6 @@ const els = {
   planPanel: document.getElementById("planPanel"),
   planGrid: document.getElementById("planGrid"),
   toggleVolunteerBtn: document.getElementById("toggleVolunteerBtn"),
-  districtVolunteerBtn: document.getElementById("districtVolunteerBtn"),
-  districtOrgChartBtn: document.getElementById("districtOrgChartBtn"),
   closeVolunteerBtn: document.getElementById("closeVolunteerBtn"),
   togglePlanBtn: document.getElementById("togglePlanBtn"),
   closePlanBtn: document.getElementById("closePlanBtn"),
@@ -296,6 +299,10 @@ function getSelectedCandidate(campaign) {
 }
 
 function renderCampaignList() {
+  if (!els.campaignList) {
+    return;
+  }
+
   els.campaignList.innerHTML = "";
   campaigns.forEach((campaign) => {
     const button = document.createElement("button");
@@ -544,6 +551,86 @@ function renderRecentDistrictMasters() {
     .join("");
 }
 
+function getDistrictKpi(districtName) {
+  const campaign = campaigns.find(
+    (item) => districtName.includes(item.district) || item.district.includes(districtName),
+  );
+
+  if (!campaign) {
+    return { posting: "-", greeting: "-" };
+  }
+
+  return {
+    posting: String(campaign.postingCount),
+    greeting: String(campaign.greetingCount),
+  };
+}
+
+function renderDistrictGroupCards(tiles) {
+  if (!els.districtGroupList) {
+    return;
+  }
+
+  const colorClasses = ["amber", "rose", "emerald", "sky", "indigo", "lime", "stone"];
+
+  els.districtGroupList.innerHTML = tiles
+    .map((tile, index) => {
+      const colorClass = colorClasses[index % colorClasses.length];
+      const kpi = getDistrictKpi(tile.districtName);
+      const isExpanded = String(tile.id) === String(state.selectedDistrictTileId);
+      const candidatePhoto = tile.candidatePhotoUrl
+        ? `<img class="district-portrait-image" src="${escapeHtml(tile.candidatePhotoUrl)}" alt="候補者写真" />`
+        : '<img class="district-portrait-image hidden" alt="候補者写真" />';
+      const portraitClass = tile.candidatePhotoUrl
+        ? `district-portrait ${colorClass} has-photo`
+        : `district-portrait ${colorClass}`;
+
+      return `
+        <article class="district-group-card${isExpanded ? " expanded" : ""}" data-select-tile="${escapeHtml(tile.id)}">
+          <div class="district-layout" data-district-id="${escapeHtml(tile.id)}">
+            <div class="district-tile">
+              <div class="district-card-copy">
+                <h2 class="district-title-line">
+                  <span class="district-name">${escapeHtml(tile.districtName)}</span>
+                  <span class="district-election-type">${escapeHtml(tile.electionType || "")}</span>
+                </h2>
+                <p class="district-election-date">投票予定日 ${escapeHtml(tile.votingDate)}</p>
+              </div>
+
+              <div class="district-portrait-wrap">
+                <div class="days-card">
+                  <div class="days-badge">
+                    <p class="district-caption">告示日まであと</p>
+                    <span>${escapeHtml(tile.daysLeft)}</span>
+                  </div>
+                </div>
+                <div class="${portraitClass}" aria-hidden="true">
+                  ${candidatePhoto}
+                  <div class="portrait-hair"></div>
+                  <div class="portrait-face"></div>
+                  <div class="portrait-shoulders"></div>
+                </div>
+                <p class="district-candidate-name">${escapeHtml(tile.candidateName)}</p>
+              </div>
+            </div>
+
+            <div class="district-side-col">
+              <article class="district-mini-tile">
+                <p>ポスティング</p>
+                <strong>${escapeHtml(kpi.posting)}</strong>
+              </article>
+              <article class="district-mini-tile">
+                <p>挨拶</p>
+                <strong>${escapeHtml(kpi.greeting)}</strong>
+              </article>
+            </div>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+}
+
 async function loadRecentApplications() {
   if (!supabase) {
     return;
@@ -611,12 +698,12 @@ async function loadRecentDistrictMasters() {
 
   state.recentDistrictMasters = (data ?? []).map(toDistrictMaster);
   renderRecentDistrictMasters();
-  void loadUpcomingElectionTile();
+  void loadUpcomingElectionTiles();
 }
 
-async function loadUpcomingElectionTile() {
+async function loadUpcomingElectionTiles() {
   if (!supabase) {
-    state.upcomingElectionTile = null;
+    state.upcomingElectionTiles = [];
     updateView(false);
     return;
   }
@@ -626,57 +713,106 @@ async function loadUpcomingElectionTile() {
     .from(SUPABASE_DISTRICT_MASTER_TABLE)
     .select("id, district_name, notification_date, voting_date")
     .gte("voting_date", todayIso)
-    .order("voting_date", { ascending: true })
-    .limit(1);
+    .order("voting_date", { ascending: true });
 
   if (districtError) {
     if (!districtError.message.includes("Could not find the table")) {
       els.districtMasterNote.textContent = `タイル表示用データの取得に失敗しました: ${districtError.message}`;
       els.districtMasterNote.classList.remove("hidden");
     }
-    state.upcomingElectionTile = null;
+    state.upcomingElectionTiles = [];
     updateView(false);
     return;
   }
 
-  const district = districts?.[0];
-  if (!district) {
-    state.upcomingElectionTile = null;
+  const districtRows = districts ?? [];
+  if (districtRows.length === 0) {
+    state.upcomingElectionTiles = [];
     updateView(false);
     return;
   }
 
-  let candidateName = "候補者 未登録";
-  let candidatePhotoUrl = "";
-
+  const districtIds = districtRows.map((district) => district.id);
   const { data: candidates, error: candidateError } = await supabase
     .from(SUPABASE_CANDIDATE_TABLE)
-    .select("member_id")
-    .eq("district_id", district.id)
-    .order("created_at", { ascending: true })
-    .limit(1);
+    .select("id, district_id, member_id, created_at")
+    .in("district_id", districtIds)
+    .order("created_at", { ascending: true });
 
-  if (!candidateError && candidates?.[0]?.member_id) {
-    const { data: memberData } = await supabase
+  const candidatesByDistrict = new Map();
+  districtIds.forEach((districtId) => {
+    candidatesByDistrict.set(districtId, []);
+  });
+
+  if (!candidateError) {
+    (candidates ?? []).forEach((candidate) => {
+      const rows = candidatesByDistrict.get(candidate.district_id) ?? [];
+      rows.push(candidate);
+      candidatesByDistrict.set(candidate.district_id, rows);
+    });
+  }
+
+  const memberIds = [
+    ...new Set(
+      (candidates ?? [])
+        .map((candidate) => candidate.member_id)
+        .filter((memberId) => typeof memberId === "number"),
+    ),
+  ];
+  let memberMap = new Map();
+
+  if (memberIds.length > 0) {
+    const { data: membersData, error: membersError } = await supabase
       .from(SUPABASE_MEMBER_TABLE)
-      .select("name, photo_url")
-      .eq("id", candidates[0].member_id)
-      .maybeSingle();
+      .select("id, name, photo_url")
+      .in("id", memberIds);
 
-    if (memberData) {
-      candidateName = memberData.name || candidateName;
-      candidatePhotoUrl = memberData.photo_url || "";
+    if (!membersError) {
+      memberMap = new Map((membersData ?? []).map((member) => [member.id, member]));
     }
   }
 
-  state.upcomingElectionTile = {
-    districtName: district.district_name,
-    electionType: "",
-    votingDate: district.voting_date,
-    daysLeft: calcDaysLeftToNotification(district.notification_date),
-    candidateName,
-    candidatePhotoUrl,
-  };
+  const tiles = [];
+
+  districtRows.forEach((district) => {
+    const districtCandidates = candidatesByDistrict.get(district.id) ?? [];
+
+    if (districtCandidates.length === 0) {
+      tiles.push({
+        id: `${district.id}-none`,
+        districtId: district.id,
+        districtName: district.district_name,
+        electionType: "",
+        votingDate: district.voting_date,
+        daysLeft: calcDaysLeftToNotification(district.notification_date),
+        candidateName: "候補者 未登録",
+        candidatePhotoUrl: "",
+      });
+      return;
+    }
+
+    districtCandidates.forEach((candidate, index) => {
+      const member = memberMap.get(candidate.member_id);
+      tiles.push({
+        id: candidate.id ?? `${district.id}-${index + 1}`,
+        districtId: district.id,
+        districtName: district.district_name,
+        electionType: "",
+        votingDate: district.voting_date,
+        daysLeft: calcDaysLeftToNotification(district.notification_date),
+        candidateName: member?.name ?? "候補者 未登録",
+        candidatePhotoUrl: member?.photo_url ?? "",
+      });
+    });
+  });
+
+  state.upcomingElectionTiles = tiles;
+  if (!state.selectedDistrictTileId && tiles.length > 0) {
+    state.selectedDistrictTileId = String(tiles[0].id);
+  }
+  if (tiles.length > 0 && !tiles.some((tile) => String(tile.id) === String(state.selectedDistrictTileId))) {
+    state.selectedDistrictTileId = String(tiles[0].id);
+  }
 
   updateView(false);
 }
@@ -684,21 +820,22 @@ async function loadUpcomingElectionTile() {
 function updateView(syncForm = true) {
   const campaign = getCampaign();
   const selectedCandidate = getSelectedCandidate(campaign);
-  const tile = state.upcomingElectionTile ?? getFallbackTile(campaign, selectedCandidate);
+  const tiles =
+    state.upcomingElectionTiles.length > 0
+      ? state.upcomingElectionTiles
+      : getFallbackTiles(campaign, selectedCandidate);
 
-  els.daysLeft.textContent = String(tile.daysLeft);
-  els.districtName.textContent = tile.districtName;
-  els.electionType.textContent = tile.electionType;
-  els.electionDate.textContent = `投票予定日 ${tile.votingDate}`;
-  els.districtCandidateName.textContent = tile.candidateName;
-  els.postingCount.textContent = String(campaign.postingCount);
-  els.greetingCount.textContent = String(campaign.greetingCount);
+  if (!state.selectedDistrictTileId && tiles.length > 0) {
+    state.selectedDistrictTileId = String(tiles[0].id);
+  }
+
+  renderDistrictGroupCards(tiles);
   els.headquartersName.textContent = campaign.headquarters;
   els.campaignSummary.textContent = campaign.candidateSummary;
   els.candidateCount.textContent = String(campaign.candidates.length);
 
   renderCampaignList();
-  renderCandidates(campaign);
+  // Top section now acts as the candidate-centric view; hide the duplicate aggregate candidate list.
   renderSkillButtons();
   renderPlan(campaign);
   renderRecentApplications();
@@ -728,19 +865,6 @@ function updateView(syncForm = true) {
   if (selectedCandidate) {
     els.toggleVolunteerBtn.querySelector("strong").textContent = "ボランティア応募";
   }
-
-  if (els.districtPortrait) {
-    els.districtPortrait.className = `district-portrait ${selectedCandidate.color}`;
-    if (tile.candidatePhotoUrl) {
-      els.districtPortrait.classList.add("has-photo");
-      els.districtPortraitImage.src = tile.candidatePhotoUrl;
-      els.districtPortraitImage.classList.remove("hidden");
-    } else {
-      els.districtPortrait.classList.remove("has-photo");
-      els.districtPortraitImage.removeAttribute("src");
-      els.districtPortraitImage.classList.add("hidden");
-    }
-  }
 }
 
 els.toggleVolunteerBtn.addEventListener("click", () => {
@@ -748,17 +872,25 @@ els.toggleVolunteerBtn.addEventListener("click", () => {
   updateView();
 });
 
-if (els.districtVolunteerBtn) {
-  els.districtVolunteerBtn.addEventListener("click", () => {
-    state.volunteerOpen = true;
-    updateView();
-    els.volunteerPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-}
+if (els.districtGroupList) {
+  els.districtGroupList.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
 
-if (els.districtOrgChartBtn) {
-  els.districtOrgChartBtn.addEventListener("click", () => {
-    window.alert("組織図はこれから追加します。設定画面から項目を整備できます。");
+    const tile = target.closest("[data-select-tile]");
+    if (!tile) {
+      return;
+    }
+
+    const tileId = tile.getAttribute("data-select-tile");
+    if (!tileId) {
+      return;
+    }
+
+    state.selectedDistrictTileId = tileId;
+    updateView(false);
   });
 }
 
@@ -880,7 +1012,7 @@ els.recentDistrictMasters.addEventListener("click", (event) => {
     els.districtMasterNote.textContent = "選挙区マスターを削除しました。";
     els.districtMasterNote.classList.remove("hidden");
     updateView();
-    void loadUpcomingElectionTile();
+    void loadUpcomingElectionTiles();
   })();
 });
 
@@ -1074,7 +1206,7 @@ els.districtMasterForm.addEventListener("submit", (event) => {
       : "選挙区マスターをSupabaseに保存しました。";
     els.districtMasterNote.classList.remove("hidden");
     updateView();
-    void loadUpcomingElectionTile();
+    void loadUpcomingElectionTiles();
   })();
 });
 
@@ -1082,4 +1214,4 @@ updateView();
 void loadRecentApplications();
 void loadRecentMembers();
 void loadRecentDistrictMasters();
-void loadUpcomingElectionTile();
+void loadUpcomingElectionTiles();
