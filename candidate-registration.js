@@ -14,6 +14,15 @@ const candidateModalBackdrop = document.getElementById("candidateModalBackdrop")
 const candidateForm = document.getElementById("candidateForm");
 const candidateDistrictSelect = document.getElementById("candidateDistrictSelect");
 const candidateMemberSelect = document.getElementById("candidateMemberSelect");
+const candidateActivityStartDate = document.getElementById("candidateActivityStartDate");
+const candidateOfficialApprovalDate = document.getElementById("candidateOfficialApprovalDate");
+const candidatePopulation = document.getElementById("candidatePopulation");
+const candidateHouseholds = document.getElementById("candidateHouseholds");
+const candidatePostingTarget = document.getElementById("candidatePostingTarget");
+const candidateGreetingTarget = document.getElementById("candidateGreetingTarget");
+const candidateStreetStandingTarget = document.getElementById("candidateStreetStandingTarget");
+const candidateDoublePosterTarget = document.getElementById("candidateDoublePosterTarget");
+const candidateStreetSpeechHoursTarget = document.getElementById("candidateStreetSpeechHoursTarget");
 const candidateList = document.getElementById("candidateList");
 const candidateNote = document.getElementById("candidateNote");
 const candidateListNote = document.getElementById("candidateListNote");
@@ -30,6 +39,19 @@ function isMissingCandidateTableError(error) {
   return (
     message.includes("Could not find the table 'public.election_candidates' in the schema cache") ||
     message.includes("relation \"public.election_candidates\" does not exist")
+  );
+}
+
+function isMissingCandidateColumnError(error) {
+  const message = String(error?.message ?? "");
+  return message.includes("column election_candidates.") && message.includes(" does not exist");
+}
+
+function isCandidatePolicyError(error) {
+  const message = String(error?.message ?? "");
+  return (
+    message.includes("new row violates row-level security policy") ||
+    message.includes("permission denied for table election_candidates")
   );
 }
 
@@ -52,6 +74,15 @@ function openCreatePanel() {
   hideNote();
   candidateDistrictSelect.value = "";
   candidateMemberSelect.value = "";
+  candidateActivityStartDate.value = "";
+  candidateOfficialApprovalDate.value = "";
+  candidatePopulation.value = "";
+  candidateHouseholds.value = "";
+  candidatePostingTarget.value = "";
+  candidateGreetingTarget.value = "";
+  candidateStreetStandingTarget.value = "";
+  candidateDoublePosterTarget.value = "";
+  candidateStreetSpeechHoursTarget.value = "";
 }
 
 function openEditPanel(candidate) {
@@ -63,6 +94,15 @@ function openEditPanel(candidate) {
   hideNote();
   candidateDistrictSelect.value = String(candidate.district_id ?? "");
   candidateMemberSelect.value = String(candidate.member_id ?? "");
+  candidateActivityStartDate.value = candidate.activity_start_date ?? "";
+  candidateOfficialApprovalDate.value = candidate.official_approval_date ?? "";
+  candidatePopulation.value = candidate.population ?? "";
+  candidateHouseholds.value = candidate.households ?? "";
+  candidatePostingTarget.value = candidate.posting_target ?? "";
+  candidateGreetingTarget.value = candidate.greeting_target ?? "";
+  candidateStreetStandingTarget.value = candidate.street_standing_target ?? "";
+  candidateDoublePosterTarget.value = candidate.double_poster_target ?? "";
+  candidateStreetSpeechHoursTarget.value = candidate.street_speech_hours_target ?? "";
 }
 
 function closePanel() {
@@ -77,6 +117,28 @@ function closePanel() {
   hideNote();
   candidateDistrictSelect.value = "";
   candidateMemberSelect.value = "";
+  candidateActivityStartDate.value = "";
+  candidateOfficialApprovalDate.value = "";
+  candidatePopulation.value = "";
+  candidateHouseholds.value = "";
+  candidatePostingTarget.value = "";
+  candidateGreetingTarget.value = "";
+  candidateStreetStandingTarget.value = "";
+  candidateDoublePosterTarget.value = "";
+  candidateStreetSpeechHoursTarget.value = "";
+}
+
+function toNullableDate(value) {
+  return value ? value : null;
+}
+
+function toNullableNumber(value) {
+  if (value === "" || value === null || value === undefined) {
+    return null;
+  }
+
+  const parsed = Number(value);
+  return Number.isNaN(parsed) ? NaN : parsed;
 }
 
 function renderSelectOptions() {
@@ -157,13 +219,15 @@ async function loadMasterData() {
 async function loadCandidateList() {
   const { data, error } = await supabase
     .from(CANDIDATE_TABLE)
-    .select("id, district_id, member_id, created_at")
+    .select(
+      "id, district_id, member_id, created_at, activity_start_date, official_approval_date, population, households, posting_target, greeting_target, street_standing_target, double_poster_target, street_speech_hours_target"
+    )
     .order("created_at", { ascending: false });
 
   if (error) {
-    if (isMissingCandidateTableError(error)) {
+    if (isMissingCandidateTableError(error) || isMissingCandidateColumnError(error)) {
       candidateListNote.textContent =
-        "候補者テーブルが未作成です。Supabase SQL Editorでsupabase.sqlを実行してから再読み込みしてください。";
+        "候補者テーブルの最新カラムが未反映です。Supabase SQL Editorでsupabase.sqlを再実行してから再読み込みしてください。";
     } else {
       candidateListNote.textContent = `候補者一覧取得に失敗しました: ${error.message}`;
     }
@@ -199,11 +263,54 @@ candidateForm.addEventListener("submit", (event) => {
   void (async () => {
     const districtId = Number(candidateDistrictSelect.value);
     const memberId = Number(candidateMemberSelect.value);
+    const activityStartDate = toNullableDate(candidateActivityStartDate.value);
+    const officialApprovalDate = toNullableDate(candidateOfficialApprovalDate.value);
+    const population = toNullableNumber(candidatePopulation.value);
+    const households = toNullableNumber(candidateHouseholds.value);
+    const postingTarget = toNullableNumber(candidatePostingTarget.value);
+    const greetingTarget = toNullableNumber(candidateGreetingTarget.value);
+    const streetStandingTarget = toNullableNumber(candidateStreetStandingTarget.value);
+    const doublePosterTarget = toNullableNumber(candidateDoublePosterTarget.value);
+    const streetSpeechHoursTarget = toNullableNumber(candidateStreetSpeechHoursTarget.value);
+
+    const numericValues = [
+      population,
+      households,
+      postingTarget,
+      greetingTarget,
+      streetStandingTarget,
+      doublePosterTarget,
+      streetSpeechHoursTarget,
+    ];
 
     if (Number.isNaN(districtId) || Number.isNaN(memberId)) {
       showNote("選挙区とメンバーを選択してください。");
       return;
     }
+
+    if (numericValues.some((value) => Number.isNaN(value))) {
+      showNote("数値項目を正しく入力してください。");
+      return;
+    }
+
+    if (numericValues.some((value) => value !== null && value < 0)) {
+      showNote("数値項目は0以上で入力してください。");
+      return;
+    }
+
+    const payload = {
+      district_id: districtId,
+      member_id: memberId,
+      activity_start_date: activityStartDate,
+      official_approval_date: officialApprovalDate,
+      population: population,
+      households: households,
+      posting_target: postingTarget,
+      greeting_target: greetingTarget,
+      street_standing_target: streetStandingTarget,
+      double_poster_target: doublePosterTarget,
+      street_speech_hours_target: streetSpeechHoursTarget,
+    };
 
     saveCandidateBtn.disabled = true;
     let error;
@@ -211,23 +318,24 @@ candidateForm.addEventListener("submit", (event) => {
     if (selectedCandidate) {
       const result = await supabase
         .from(CANDIDATE_TABLE)
-        .update({ district_id: districtId, member_id: memberId })
+        .update(payload)
         .eq("id", selectedCandidate.id);
       error = result.error;
     } else {
-      const result = await supabase.from(CANDIDATE_TABLE).insert({
-        district_id: districtId,
-        member_id: memberId,
-      });
+      const result = await supabase.from(CANDIDATE_TABLE).insert(payload);
       error = result.error;
     }
 
     saveCandidateBtn.disabled = false;
 
     if (error) {
-      if (isMissingCandidateTableError(error)) {
+      if (isMissingCandidateTableError(error) || isMissingCandidateColumnError(error)) {
         showNote(
-          "候補者テーブルが未作成です。Supabase SQL Editorでsupabase.sqlを実行し、ページを再読み込みしてください。"
+          "候補者テーブルの最新カラムが未反映です。Supabase SQL Editorでsupabase.sqlを実行し、ページを再読み込みしてください。"
+        );
+      } else if (isCandidatePolicyError(error)) {
+        showNote(
+          "候補者テーブルの更新ポリシーが未反映です。Supabase SQL Editorでsupabase.sqlを再実行してください。"
         );
       } else {
         showNote(`保存に失敗しました: ${error.message}`);

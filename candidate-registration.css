@@ -180,7 +180,20 @@ h1 {
   background: #fffdfa;
 }
 
+.candidate-form input {
+  width: 100%;
+  border: 1px solid #dcc9a9;
+  border-radius: 14px;
+  padding: 12px 14px;
+  outline: none;
+  background: #fffdfa;
+}
+
 .candidate-form select:focus {
+  border-color: #b98a46;
+}
+
+.candidate-form input:focus {
   border-color: #b98a46;
 }
 

@@ -110,6 +110,17 @@ create table if not exists public.election_candidates (
   member_id bigint not null references public.members (id) on delete restrict
 );
 
+alter table public.election_candidates
+  add column if not exists activity_start_date date,
+  add column if not exists official_approval_date date,
+  add column if not exists population integer check (population >= 0),
+  add column if not exists households integer check (households >= 0),
+  add column if not exists posting_target integer check (posting_target >= 0),
+  add column if not exists greeting_target integer check (greeting_target >= 0),
+  add column if not exists street_standing_target integer check (street_standing_target >= 0),
+  add column if not exists double_poster_target integer check (double_poster_target >= 0),
+  add column if not exists street_speech_hours_target numeric(8, 1) check (street_speech_hours_target >= 0);
+
 create unique index if not exists election_candidates_district_member_unique
   on public.election_candidates (district_id, member_id);
 
@@ -124,6 +135,160 @@ create policy "Allow public insert election candidates" on public.election_candi
 drop policy if exists "Allow public select election candidates" on public.election_candidates;
 create policy "Allow public select election candidates" on public.election_candidates
   for select
+  to anon
+  using (true);
+
+drop policy if exists "Allow public update election candidates" on public.election_candidates;
+create policy "Allow public update election candidates" on public.election_candidates
+  for update
+  to anon
+  using (true)
+  with check (true);
+
+drop policy if exists "Allow public delete election candidates" on public.election_candidates;
+create policy "Allow public delete election candidates" on public.election_candidates
+  for delete
+  to anon
+  using (true);
+
+create table if not exists public.posting_counts (
+  id bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  district_name text not null,
+  candidate_name text not null,
+  activity_date date not null,
+  count integer not null check (count >= 0)
+);
+
+alter table public.posting_counts
+  add column if not exists posting_member_id bigint;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'posting_counts_posting_member_id_fkey'
+  ) then
+    alter table public.posting_counts
+      add constraint posting_counts_posting_member_id_fkey
+      foreign key (posting_member_id)
+      references public.members (id)
+      on delete restrict;
+  end if;
+end
+$$;
+
+alter table public.posting_counts enable row level security;
+
+drop policy if exists "Allow public insert posting counts" on public.posting_counts;
+create policy "Allow public insert posting counts" on public.posting_counts
+  for insert
+  to anon
+  with check (true);
+
+drop policy if exists "Allow public select posting counts" on public.posting_counts;
+create policy "Allow public select posting counts" on public.posting_counts
+  for select
+  to anon
+  using (true);
+
+drop policy if exists "Allow public update posting counts" on public.posting_counts;
+create policy "Allow public update posting counts" on public.posting_counts
+  for update
+  to anon
+  using (true)
+  with check (true);
+
+drop policy if exists "Allow public delete posting counts" on public.posting_counts;
+create policy "Allow public delete posting counts" on public.posting_counts
+  for delete
+  to anon
+  using (true);
+
+create table if not exists public.campaign_activity_counts (
+  id bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  district_name text not null,
+  candidate_name text not null,
+  member_id bigint not null references public.members (id) on delete restrict,
+  activity_kind text not null check (activity_kind in ('greeting', 'standing', 'doublePoster', 'speech')),
+  activity_date date not null,
+  count numeric(10, 1) not null check (count >= 0)
+);
+
+alter table public.campaign_activity_counts enable row level security;
+
+drop policy if exists "Allow public insert campaign activity counts" on public.campaign_activity_counts;
+create policy "Allow public insert campaign activity counts" on public.campaign_activity_counts
+  for insert
+  to anon
+  with check (true);
+
+drop policy if exists "Allow public select campaign activity counts" on public.campaign_activity_counts;
+create policy "Allow public select campaign activity counts" on public.campaign_activity_counts
+  for select
+  to anon
+  using (true);
+
+drop policy if exists "Allow public update campaign activity counts" on public.campaign_activity_counts;
+create policy "Allow public update campaign activity counts" on public.campaign_activity_counts
+  for update
+  to anon
+  using (true)
+  with check (true);
+
+drop policy if exists "Allow public delete campaign activity counts" on public.campaign_activity_counts;
+create policy "Allow public delete campaign activity counts" on public.campaign_activity_counts
+  for delete
+  to anon
+  using (true);
+
+create table if not exists public.supporter_members (
+  id bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  candidate_id bigint not null references public.election_candidates (id) on delete restrict,
+  candidate_name text not null,
+  name text not null,
+  furigana text,
+  postal_code text,
+  address text,
+  phone text,
+  mobile text,
+  email text,
+  registration_date date not null default current_date
+);
+
+create index if not exists supporter_members_candidate_id_idx
+  on public.supporter_members (candidate_id);
+
+create index if not exists supporter_members_registration_date_idx
+  on public.supporter_members (registration_date);
+
+alter table public.supporter_members enable row level security;
+
+drop policy if exists "Allow public insert supporter members" on public.supporter_members;
+create policy "Allow public insert supporter members" on public.supporter_members
+  for insert
+  to anon
+  with check (true);
+
+drop policy if exists "Allow public select supporter members" on public.supporter_members;
+create policy "Allow public select supporter members" on public.supporter_members
+  for select
+  to anon
+  using (true);
+
+drop policy if exists "Allow public update supporter members" on public.supporter_members;
+create policy "Allow public update supporter members" on public.supporter_members
+  for update
+  to anon
+  using (true)
+  with check (true);
+
+drop policy if exists "Allow public delete supporter members" on public.supporter_members;
+create policy "Allow public delete supporter members" on public.supporter_members
+  for delete
   to anon
   using (true);
 

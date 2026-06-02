@@ -15,66 +15,18 @@ const supabase = hasSupabaseConfig ? createClient(SUPABASE_URL, SUPABASE_ANON_KE
 
 const campaigns = [
   {
-    id: "akita-city",
-    headquarters: "秋市議会対策本部",
-    district: "秋市",
-    electionType: "市議会議員選挙",
-    electionDate: "2026-07-19",
-    daysLeft: 47,
-    candidateSummary: "地域密着の街頭・訪問・掲示を統合して進行中",
-    postingCount: 1240,
-    greetingCount: 860,
-    posterCount: 318,
-    candidates: [
-      { id: "akita-1", name: "山本 ひろし", role: "現職", district: "秋市中心部", status: "街頭と地域行脚を強化", phone: "090-1234-5678", email: "hiroshi@example.jp", color: "amber", initials: "HY", focus: "交通・子育て・商店街" },
-      { id: "akita-2", name: "佐藤 みゆき", role: "新人", district: "秋市東部", status: "女性ネットワークと現場対話を拡大", phone: "090-2222-3333", email: "miyuki@example.jp", color: "rose", initials: "SM", focus: "福祉・教育・防災" },
-      { id: "akita-3", name: "高橋 しゅん", role: "新人", district: "秋市西部", status: "駅前配布と夕方の挨拶を担当", phone: "090-4444-5555", email: "shun@example.jp", color: "emerald", initials: "TS", focus: "雇用・交通・観光" },
-      { id: "akita-4", name: "中村 あや", role: "サポート候補", district: "秋市南部", status: "4人以上のため一覧を圧縮表示", phone: "090-6666-7777", email: "aya@example.jp", color: "sky", initials: "NA", focus: "生活道路・教育・高齢者" },
-    ],
-    actionPlan: [
-      { date: "6/2", time: "18:30 - 20:00", title: "駅前挨拶", detail: "主要駅でのあいさつとチラシ配布。" },
-      { date: "6/3", time: "10:00 - 12:00", title: "ポスター確認", detail: "掲示状況と剥がれの確認、差し替え。" },
-      { date: "6/3", time: "14:00 - 16:30", title: "地域訪問", detail: "商店街と住宅地を回り、要望を回収。" },
-    ],
-  },
-  {
-    id: "akita-pref",
-    headquarters: "県政連携本部",
-    district: "県北ブロック",
-    electionType: "県議会議員選挙",
-    electionDate: "2026-08-02",
-    daysLeft: 61,
-    candidateSummary: "広域対応のため地区別に班編成中",
-    postingCount: 920,
-    greetingCount: 740,
-    posterCount: 206,
-    candidates: [
-      { id: "akita-pref-1", name: "小林 なお", role: "現職", district: "県北第一区", status: "農業・医療を中心に訴求", phone: "090-8888-9999", email: "nao@example.jp", color: "indigo", initials: "KN", focus: "農業・医療・道路" },
-      { id: "akita-pref-2", name: "田中 れん", role: "新人", district: "県北第二区", status: "集会と訪問の連携を担当", phone: "090-1212-3434", email: "ren@example.jp", color: "lime", initials: "TR", focus: "産業・教育・物流" },
-    ],
-    actionPlan: [
-      { date: "6/2", time: "19:00 - 20:30", title: "地区打合せ", detail: "班長と当日の動線を再確認。" },
-      { date: "6/4", time: "08:30 - 11:00", title: "街頭演説", detail: "通勤帯に合わせて重点駅で実施。" },
-    ],
-  },
-  {
-    id: "akita-town",
-    headquarters: "町村対策室",
-    district: "南町",
-    electionType: "町議会議員補欠選挙",
-    electionDate: "2026-06-28",
-    daysLeft: 26,
-    candidateSummary: "少人数体制で機動的に対応",
-    postingCount: 410,
-    greetingCount: 290,
-    posterCount: 102,
-    candidates: [
-      { id: "akita-town-1", name: "藤井 さとる", role: "新人", district: "南町全域", status: "地域集会を中心に活動", phone: "090-7777-1111", email: "satoru@example.jp", color: "stone", initials: "FS", focus: "暮らし・子育て・防災" },
-    ],
-    actionPlan: [
-      { date: "6/2", time: "17:00 - 18:00", title: "戸別訪問", detail: "近隣商店と住宅のあいさつ回り。" },
-      { date: "6/5", time: "13:00 - 15:00", title: "タウンミーティング", detail: "住民の要望を集約して記録。" },
-    ],
+    id: "default",
+    headquarters: "",
+    district: "",
+    electionType: "",
+    electionDate: "",
+    daysLeft: 0,
+    candidateSummary: "",
+    postingCount: 0,
+    greetingCount: 0,
+    posterCount: 0,
+    candidates: [],
+    actionPlan: [],
   },
 ];
 
@@ -84,7 +36,7 @@ const volunteerTimes = ["午前", "午後", "夕方", "終日"];
 
 const state = {
   campaignId: campaigns[0].id,
-  candidateId: campaigns[0].candidates[0].id,
+  candidateId: campaigns[0].candidates[0]?.id ?? null,
   volunteerOpen: false,
   planOpen: false,
   memberOpen: false,
@@ -154,22 +106,13 @@ function calcDaysLeftToNotification(notificationDate) {
 
 function getFallbackTiles(campaign) {
   if (!Array.isArray(campaign.candidates) || campaign.candidates.length === 0) {
-    return [
-      {
-        id: `${campaign.id}-none`,
-        districtName: campaign.district,
-        electionType: campaign.electionType,
-        votingDate: campaign.electionDate,
-        daysLeft: campaign.daysLeft,
-        candidateName: "候補者 未設定",
-        candidatePhotoUrl: "",
-      },
-    ];
+    return [];
   }
 
   return campaign.candidates.map((candidate) => ({
     id: `${campaign.id}-${candidate.id}`,
     districtName: campaign.district,
+    notificationDate: "",
     electionType: campaign.electionType,
     votingDate: campaign.electionDate,
     daysLeft: campaign.daysLeft,
@@ -327,7 +270,8 @@ function getCampaign() {
 }
 
 function getSelectedCandidate(campaign) {
-  return campaign.candidates.find((candidate) => candidate.id === state.candidateId) ?? campaign.candidates[0];
+  const list = Array.isArray(campaign.candidates) ? campaign.candidates : [];
+  return list.find((candidate) => candidate.id === state.candidateId) ?? list[0] ?? null;
 }
 
 function renderCampaignList() {
@@ -508,7 +452,13 @@ function renderSkillButtons() {
 }
 
 function renderPlan(campaign) {
-  els.planGrid.innerHTML = campaign.actionPlan
+  const actionPlan = Array.isArray(campaign.actionPlan) ? campaign.actionPlan : [];
+  if (actionPlan.length === 0) {
+    els.planGrid.innerHTML = '<p class="empty">行動計画はまだ登録されていません。</p>';
+    return;
+  }
+
+  els.planGrid.innerHTML = actionPlan
     .map(
       (item) => `
         <article class="plan-item">
@@ -788,6 +738,7 @@ async function loadUpcomingElectionTiles() {
         id: `${district.id}-none`,
         districtId: district.id,
         districtName: district.district_name,
+        notificationDate: district.notification_date,
         electionType: "",
         votingDate: district.voting_date,
         daysLeft: calcDaysLeftToNotification(district.notification_date),
@@ -803,6 +754,7 @@ async function loadUpcomingElectionTiles() {
         id: candidate.id ?? `${district.id}-${index + 1}`,
         districtId: district.id,
         districtName: district.district_name,
+        notificationDate: district.notification_date,
         electionType: "",
         votingDate: district.voting_date,
         daysLeft: calcDaysLeftToNotification(district.notification_date),
@@ -836,9 +788,9 @@ function updateView(syncForm = true) {
   }
 
   renderDistrictGroupCards(tiles);
-  els.headquartersName.textContent = campaign.headquarters;
-  els.campaignSummary.textContent = campaign.candidateSummary;
-  els.candidateCount.textContent = String(campaign.candidates.length);
+  els.headquartersName.textContent = campaign.headquarters || "本部未設定";
+  els.campaignSummary.textContent = campaign.candidateSummary || "";
+  els.candidateCount.textContent = String(Array.isArray(campaign.candidates) ? campaign.candidates.length : 0);
 
   renderCampaignList();
   // Top section now acts as the candidate-centric view; hide the duplicate aggregate candidate list.
@@ -907,6 +859,7 @@ if (els.districtGroupList) {
       districtName: String(selectedTile.districtName ?? ""),
       candidateName: String(selectedTile.candidateName ?? ""),
       electionType: String(selectedTile.electionType ?? ""),
+      notificationDate: String(selectedTile.notificationDate ?? ""),
       votingDate: String(selectedTile.votingDate ?? ""),
       daysLeft: String(selectedTile.daysLeft ?? ""),
       candidatePhotoUrl: String(selectedTile.candidatePhotoUrl ?? ""),

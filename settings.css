@@ -104,6 +104,22 @@ body {
   box-shadow: 0 12px 28px rgba(114, 84, 31, 0.12);
 }
 
+.setting-btn.disabled,
+.setting-btn:disabled {
+  background: #efebe2;
+  color: #8a8273;
+  border-color: #d8d1c3;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.setting-btn.disabled:hover,
+.setting-btn:disabled:hover {
+  transform: none;
+  border-color: #d8d1c3;
+  box-shadow: none;
+}
+
 @media (max-width: 640px) {
   .settings-header {
     flex-direction: column;

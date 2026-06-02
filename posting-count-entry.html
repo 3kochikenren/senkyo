@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">ポスティング件数入力</title>
+    <link rel="stylesheet" href="posting-count-entry.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="card form-card">
+        <header class="head">
+          <div>
+            <p class="eyebrow" id="formEyebrow">Posting Count</p>
+            <h1 id="formTitle">ポスティング件数入力</h1>
+          </div>
+          <a id="backToBoardLink" class="back-link" href="candidate-board.html">候補者ボードへ戻る</a>
+        </header>
+
+        <form id="postingForm" class="form-grid">
+          <label>
+            <span>選挙区</span>
+            <input id="districtName" type="text" required />
+          </label>
+
+          <label>
+            <span>候補者</span>
+            <input id="candidateName" type="text" required />
+          </label>
+
+          <label>
+            <span>活動した人（メンバー）</span>
+            <select id="postingMemberId" required>
+              <option value="">メンバーを選択</option>
+            </select>
+          </label>
+
+          <label>
+            <span>日付</span>
+            <input id="activityDate" type="date" required />
+          </label>
+
+          <label>
+            <span id="sheetCountLabel">件数（枚数）</span>
+            <input id="sheetCount" type="number" min="0" step="1" required />
+          </label>
+
+          <button type="submit" class="save-btn">保存する</button>
+        </form>
+
+        <p id="formNote" class="note hidden"></p>
+      </section>
+    </main>
+
+    <script type="module" src="posting-count-entry.js"></script>
+  </body>
+</html>

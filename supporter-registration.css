@@ -1,0 +1,195 @@
+:root {
+  --bg: #f2eadf;
+  --bg-2: #ece1d0;
+  --text: #1d1b16;
+  --muted: #6a6256;
+  --line: rgba(92, 73, 38, 0.16);
+  --shadow: 0 18px 48px rgba(72, 54, 21, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(201, 138, 50, 0.24), transparent 28%),
+    radial-gradient(circle at top right, rgba(84, 103, 173, 0.18), transparent 26%),
+    linear-gradient(180deg, #f8f4ec 0%, #f2eadf 42%, #ece1d0 100%);
+}
+
+.supporter-shell {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+.supporter-card {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+  background: rgba(255, 255, 255, 0.84);
+  padding: 24px;
+}
+
+.supporter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #786d5d;
+}
+
+h1 {
+  margin: 8px 0 0;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.lead {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.settings-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(31, 36, 48, 0.2);
+  color: #1f2430;
+  text-decoration: none;
+  font-weight: 700;
+  background: #fff;
+}
+
+.supporter-form {
+  margin-top: 20px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+}
+
+label {
+  display: grid;
+  gap: 6px;
+}
+
+label span {
+  font-weight: 700;
+  color: #5f5444;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 12px;
+  border: 1px solid #d9ccb6;
+  background: #fff;
+  color: var(--text);
+}
+
+.actions {
+  grid-column: 1 / -1;
+}
+
+#saveSupporterBtn {
+  border: 1px solid rgba(31, 36, 48, 0.2);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1f2430 0%, #222d44 100%);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
+.note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.9rem;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.note.ok {
+  background: rgba(16, 185, 129, 0.12);
+  color: #14532d;
+}
+
+.note.error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #7f1d1d;
+}
+
+.hidden {
+  display: none;
+}
+
+.recent-section {
+  margin-top: 20px;
+  border-top: 1px solid rgba(92, 73, 38, 0.14);
+  padding-top: 14px;
+}
+
+.recent-section h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.recent-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.recent-item {
+  border: 1px solid rgba(92, 73, 38, 0.14);
+  border-radius: 12px;
+  background: #fffaf1;
+  padding: 10px 12px;
+  display: grid;
+  gap: 4px;
+}
+
+.recent-item strong {
+  font-size: 0.98rem;
+}
+
+.recent-item span {
+  color: #5f5444;
+  font-size: 0.88rem;
+}
+
+.empty {
+  margin: 0;
+  color: #786d5d;
+}
+
+@media (max-width: 760px) {
+  .supporter-card {
+    padding: 16px;
+  }
+
+  .supporter-header {
+    flex-direction: column;
+  }
+
+  .supporter-form {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>後援会員登録</title>
+    <meta name="description" content="後援会員を候補者ごとに登録する画面です。" />
+    <link rel="stylesheet" href="supporter-registration.css" />
+  </head>
+  <body>
+    <main class="supporter-shell">
+      <section class="supporter-card">
+        <header class="supporter-header">
+          <div>
+            <p class="eyebrow">Supporter Registration</p>
+            <h1>後援会員登録</h1>
+            <p class="lead">候補者ごとの後援会員を登録します。</p>
+          </div>
+          <a id="backLink" class="settings-back-btn" href="settings.html">設定へ戻る</a>
+        </header>
+
+        <form id="supporterForm" class="supporter-form">
+          <label>
+            <span>候補者名（選択）</span>
+            <select id="candidateSelect" required>
+              <option value="">選択してください</option>
+            </select>
+          </label>
+
+          <label>
+            <span>名前（必須）</span>
+            <input id="supporterName" type="text" required />
+          </label>
+
+          <label>
+            <span>ふりがな</span>
+            <input id="supporterFurigana" type="text" />
+          </label>
+
+          <label>
+            <span>郵便番号</span>
+            <input id="supporterPostalCode" type="text" placeholder="000-0000" />
+          </label>
+
+          <label>
+            <span>住所</span>
+            <input id="supporterAddress" type="text" />
+          </label>
+
+          <label>
+            <span>電話</span>
+            <input id="supporterPhone" type="text" />
+          </label>
+
+          <label>
+            <span>携帯</span>
+            <input id="supporterMobile" type="text" />
+          </label>
+
+          <label>
+            <span>メール</span>
+            <input id="supporterEmail" type="email" />
+          </label>
+
+          <label>
+            <span>登録日</span>
+            <input id="supporterRegistrationDate" type="date" required />
+          </label>
+
+          <div class="actions">
+            <button id="saveSupporterBtn" type="submit">保存</button>
+          </div>
+          <p id="supporterNote" class="note hidden"></p>
+        </form>
+
+        <section class="recent-section">
+          <h2>最近の登録</h2>
+          <div id="recentSupporters" class="recent-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="supporter-registration.js"></script>
+  </body>
+</html>

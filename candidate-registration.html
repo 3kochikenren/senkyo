@@ -44,6 +44,51 @@
                   <option value="">選択してください</option>
                 </select>
               </label>
+
+              <label>
+                <span>活動開始日</span>
+                <input id="candidateActivityStartDate" type="date" />
+              </label>
+
+              <label>
+                <span>公認承認日</span>
+                <input id="candidateOfficialApprovalDate" type="date" />
+              </label>
+
+              <label>
+                <span>人口</span>
+                <input id="candidatePopulation" type="number" min="0" step="1" />
+              </label>
+
+              <label>
+                <span>世帯数</span>
+                <input id="candidateHouseholds" type="number" min="0" step="1" />
+              </label>
+
+              <label>
+                <span>ポスティング目標</span>
+                <input id="candidatePostingTarget" type="number" min="0" step="1" />
+              </label>
+
+              <label>
+                <span>あいさつ目標</span>
+                <input id="candidateGreetingTarget" type="number" min="0" step="1" />
+              </label>
+
+              <label>
+                <span>辻立ち目標</span>
+                <input id="candidateStreetStandingTarget" type="number" min="0" step="1" />
+              </label>
+
+              <label>
+                <span>２連ポスター目標</span>
+                <input id="candidateDoublePosterTarget" type="number" min="0" step="1" />
+              </label>
+
+              <label>
+                <span>街宣時間目標</span>
+                <input id="candidateStreetSpeechHoursTarget" type="number" min="0" step="0.5" />
+              </label>
               <div class="actions">
                 <button id="saveCandidateBtn" type="submit">保存</button>
                 <button id="deleteCandidateBtn" class="danger hidden" type="button">削除</button>

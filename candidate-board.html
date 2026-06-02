@@ -110,7 +110,7 @@
       .board-grid {
         display: grid;
         gap: 18px;
-        grid-template-columns: minmax(240px, 0.95fr) minmax(300px, 1.2fr) minmax(260px, 1fr);
+        grid-template-columns: minmax(420px, 1.2fr) minmax(320px, 0.9fr);
       }
 
       .panel {
@@ -120,28 +120,49 @@
         padding: 18px;
       }
 
-      .urgent-panel {
+      .left-panel {
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(251, 244, 234, 0.94) 100%),
           radial-gradient(circle at 24% 18%, var(--danger-soft), transparent 36%);
       }
 
-      .urgent-panel.level-safe {
+      .left-panel.level-safe {
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(236, 248, 242, 0.94) 100%),
           radial-gradient(circle at 24% 18%, rgba(16, 185, 129, 0.16), transparent 36%);
       }
 
-      .urgent-panel.level-warn {
+      .left-panel.level-warn {
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 243, 220, 0.94) 100%),
           radial-gradient(circle at 24% 18%, rgba(245, 158, 11, 0.18), transparent 36%);
       }
 
-      .urgent-panel.level-critical {
+      .left-panel.level-critical {
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(254, 229, 226, 0.93) 100%),
           radial-gradient(circle at 24% 18%, rgba(180, 35, 24, 0.24), transparent 36%);
+      }
+
+      .meta-row {
+        margin-top: 8px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .meta-item {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+        letter-spacing: 0.05em;
+      }
+
+      .days-wrap {
+        margin-top: 16px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(92, 73, 38, 0.12);
+        background: rgba(255, 255, 255, 0.72);
       }
 
       .urgent-label {
@@ -168,11 +189,11 @@
         font-weight: 700;
       }
 
-      .urgent-panel.level-warn .days-caption {
+      .left-panel.level-warn .days-caption {
         color: #9a6700;
       }
 
-      .urgent-panel.level-critical .days-caption {
+      .left-panel.level-critical .days-caption {
         color: var(--danger);
       }
 
@@ -194,19 +215,19 @@
         transform: translateX(0);
       }
 
-      .urgent-panel.level-warn .pulse {
+      .left-panel.level-warn .pulse {
         background: rgba(245, 158, 11, 0.2);
       }
 
-      .urgent-panel.level-warn .pulse::after {
+      .left-panel.level-warn .pulse::after {
         background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
       }
 
-      .urgent-panel.level-critical .pulse {
+      .left-panel.level-critical .pulse {
         background: rgba(180, 35, 24, 0.2);
       }
 
-      .urgent-panel.level-critical .pulse::after {
+      .left-panel.level-critical .pulse::after {
         background: linear-gradient(90deg, #ef4444 0%, #b42318 100%);
       }
 
@@ -274,7 +295,8 @@
 
       .kpi-panel {
         display: grid;
-        gap: 14px;
+        gap: 12px;
+        grid-template-columns: 1fr;
       }
 
       .kpi-card {
@@ -282,6 +304,17 @@
         border: 1px solid rgba(92, 73, 38, 0.14);
         background: #fff9ee;
         padding: 16px;
+      }
+
+      .kpi-card.clickable {
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+
+      .kpi-card.clickable:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(31, 36, 48, 0.12);
+        border-color: rgba(59, 130, 246, 0.35);
       }
 
       .kpi-label {
@@ -322,10 +355,45 @@
         background: linear-gradient(90deg, #10b981 0%, #047857 100%);
       }
 
+      .kpi-meter-bar.standing {
+        background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+      }
+
+      .kpi-meter-bar.double-poster {
+        background: linear-gradient(90deg, #8b5cf6 0%, #6d28d9 100%);
+      }
+
+      .kpi-meter-bar.speech {
+        background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);
+      }
+
+      .kpi-meter-bar.member {
+        background: linear-gradient(90deg, #0ea5e9 0%, #0369a1 100%);
+      }
+
       .kpi-note {
         margin: 10px 0 0;
         font-size: 0.74rem;
         color: #7a705f;
+      }
+
+      .kpi-action-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 12px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(31, 36, 48, 0.24);
+        background: #ffffff;
+        color: #1f2430;
+        text-decoration: none;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+
+      .kpi-action-link:hover {
+        background: #f5f7fb;
       }
 
       .kpi-trend {
@@ -365,6 +433,7 @@
         .days-value {
           font-size: 4.6rem;
         }
+
       }
 
       @keyframes pulseMove {
@@ -396,19 +465,23 @@
 
         <section class="board">
           <div class="board-grid">
-            <section class="panel urgent-panel">
-              <p class="urgent-label">あと何日？</p>
-              <p class="days-value" id="daysLeft">0</p>
-              <p class="days-caption" id="daysCaption">告示までの残り日数</p>
-              <div class="pulse" aria-hidden="true"></div>
-            </section>
-
-            <section class="panel candidate-panel">
+            <section class="panel left-panel">
               <div class="district-line">
                 <h1 class="district" id="districtName">選挙区</h1>
                 <span class="election-type" id="electionType">-</span>
               </div>
-              <p class="voting-date" id="votingDate">投票日 -</p>
+              <div class="meta-row">
+                <p class="meta-item" id="votingDate">投票日 -</p>
+                <p class="meta-item" id="notificationDate">告示日 -</p>
+              </div>
+
+              <div class="days-wrap">
+                <p class="urgent-label">あと何日？</p>
+                <p class="days-value" id="daysLeft">0</p>
+                <p class="days-caption" id="daysCaption">告示までの残り日数</p>
+                <div class="pulse" aria-hidden="true"></div>
+              </div>
+
               <div class="portrait-wrap">
                 <p class="candidate-name" id="candidateName">候補者名</p>
                 <img id="candidatePhoto" class="portrait" src="" alt="候補者写真" />
@@ -417,18 +490,8 @@
             </section>
 
             <section class="kpi-panel">
-              <article class="kpi-card">
-                <p class="kpi-label">ポスティング件数</p>
-                <p class="kpi-value" id="postingCount">-</p>
-                <div class="kpi-meter" aria-hidden="true">
-                  <div id="postingBar" class="kpi-meter-bar posting"></div>
-                </div>
-                <p class="kpi-trend" id="postingTrend">稼働データを算出中</p>
-                <p class="kpi-note">目標到達に向けた稼働状況</p>
-              </article>
-
-              <article class="kpi-card">
-                <p class="kpi-label">挨拶訪問件数</p>
+              <article class="kpi-card clickable" data-register-kind="greeting" role="button" tabindex="0" aria-label="あいさつ件数の登録画面を開く">
+                <p class="kpi-label">あいさつ件数</p>
                 <p class="kpi-value" id="greetingCount">-</p>
                 <div class="kpi-meter" aria-hidden="true">
                   <div id="greetingBar" class="kpi-meter-bar greeting"></div>
@@ -436,18 +499,86 @@
                 <p class="kpi-trend" id="greetingTrend">稼働データを算出中</p>
                 <p class="kpi-note">対話接点の広がりを可視化</p>
               </article>
+
+              <article class="kpi-card clickable" data-register-kind="posting" role="button" tabindex="0" aria-label="ポスティング件数の登録画面を開く">
+                <p class="kpi-label">ポスティング件数</p>
+                <p class="kpi-value" id="postingCount">-</p>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div id="postingBar" class="kpi-meter-bar posting"></div>
+                </div>
+                <p class="kpi-trend" id="postingTrend">稼働データを算出中</p>
+                <a id="openPostingInputBtn" class="kpi-action-link" href="posting-count-entry.html">件数を入力</a>
+                <p class="kpi-note">目標到達に向けた稼働状況</p>
+              </article>
+
+              <article class="kpi-card clickable" data-register-kind="standing" role="button" tabindex="0" aria-label="辻立ち件数の登録画面を開く">
+                <p class="kpi-label">辻立ち</p>
+                <p class="kpi-value" id="standingCount">-</p>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div id="standingBar" class="kpi-meter-bar standing"></div>
+                </div>
+                <p class="kpi-trend" id="standingTrend">稼働データを算出中</p>
+                <p class="kpi-note">現地接触の積み上げ</p>
+              </article>
+
+              <article class="kpi-card clickable" data-register-kind="doublePoster" role="button" tabindex="0" aria-label="2連ポスター件数の登録画面を開く">
+                <p class="kpi-label">２連ポスター</p>
+                <p class="kpi-value" id="doublePosterCount">-</p>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div id="doublePosterBar" class="kpi-meter-bar double-poster"></div>
+                </div>
+                <p class="kpi-trend" id="doublePosterTrend">稼働データを算出中</p>
+                <p class="kpi-note">掲示網の到達率</p>
+              </article>
+
+              <article class="kpi-card clickable" data-register-kind="speech" role="button" tabindex="0" aria-label="街宣時間の登録画面を開く">
+                <p class="kpi-label">街宣時間</p>
+                <p class="kpi-value" id="speechCount">-</p>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div id="speechBar" class="kpi-meter-bar speech"></div>
+                </div>
+                <p class="kpi-trend" id="speechTrend">稼働データを算出中</p>
+                <p class="kpi-note">有権者接触時間の達成率</p>
+              </article>
+
+              <article class="kpi-card clickable" data-register-kind="member" role="button" tabindex="0" aria-label="会員登録画面を開く">
+                <p class="kpi-label">会員人数</p>
+                <p class="kpi-value" id="memberCount">-</p>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div id="memberBar" class="kpi-meter-bar member"></div>
+                </div>
+                <p class="kpi-trend" id="memberTrend">稼働データを算出中</p>
+                <p class="kpi-note">登録会員の現在総数</p>
+              </article>
             </section>
           </div>
         </section>
       </section>
     </main>
 
-    <script>
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+      const SUPABASE_URL = "https://ufwnepzbuqmhtifkilsk.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmd25lcHpidXFtaHRpZmtpbHNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzOTUxNzIsImV4cCI6MjA5NTk3MTE3Mn0.jkIuBUKqUGg2mx29VFLKImLxceElU7TdABtZVJGKt1E";
+      const SUPABASE_POSTING_TABLE = "posting_counts";
+      const SUPABASE_ACTIVITY_TABLE = "campaign_activity_counts";
+      const SUPABASE_CANDIDATE_TABLE = "election_candidates";
+      const SUPABASE_MEMBER_TABLE = "members";
+      const SUPABASE_DISTRICT_MASTER_TABLE = "election_district_master";
+      const hasSupabaseConfig =
+        SUPABASE_URL !== "https://YOUR_PROJECT_ID.supabase.co" &&
+        SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY";
+      const supabase = hasSupabaseConfig ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
       const params = new URLSearchParams(window.location.search);
+      const tileId = params.get("tileId") || "";
 
       const districtName = params.get("districtName") || "選挙区";
       const electionType = params.get("electionType") || "全域対象";
       const votingDate = params.get("votingDate") || "-";
+      const notificationDate = params.get("notificationDate") || "-";
       const daysLeft = params.get("daysLeft") || "0";
       const candidateName = params.get("candidateName") || "候補者 未設定";
       const candidatePhotoUrl = params.get("candidatePhotoUrl") || "";
@@ -455,28 +586,19 @@
       const greetingCountRaw = params.get("greetingCount") || "-";
 
       const toNumber = (value) => {
-        const parsed = Number(String(value).replace(/[^0-9]/g, ""));
+        const parsed = Number(
+          String(value)
+            .replaceAll(",", "")
+            .replace("件", "")
+            .replace("時間", "")
+            .replace("時", "")
+            .trim()
+        );
         return Number.isFinite(parsed) ? parsed : NaN;
       };
 
-      const formatCount = (value) => {
-        const num = toNumber(value);
-        if (Number.isNaN(num) || num <= 0) {
-          return "-";
-        }
-        return `${num.toLocaleString("ja-JP")}件`;
-      };
-
-      const toMeterWidth = (value, max) => {
-        const num = toNumber(value);
-        if (Number.isNaN(num) || num <= 0) {
-          return 8;
-        }
-        return Math.max(8, Math.min(100, Math.round((num / max) * 100)));
-      };
-
       const setUrgencyLevel = (value) => {
-        const panel = document.querySelector(".urgent-panel");
+        const panel = document.querySelector(".left-panel");
         const caption = document.getElementById("daysCaption");
         const num = Number(value);
 
@@ -502,78 +624,368 @@
         caption.textContent = "基盤構築期間: 先行展開フェーズ";
       };
 
-      const setTrendText = (id, value, max) => {
+      const setGoalPercentTrend = (id, current, target) => {
         const el = document.getElementById(id);
-        const num = toNumber(value);
         if (!el) {
           return;
         }
 
-        if (Number.isNaN(num) || num <= 0) {
-          el.textContent = "データ未投入";
+        if (!Number.isFinite(target) || target <= 0) {
+          el.textContent = "目標未設定";
           el.style.color = "#8a7860";
           return;
         }
 
-        const ratio = Math.round((num / max) * 100);
+        const ratio = Math.round((current / target) * 100);
         if (ratio >= 80) {
-          el.textContent = `達成度 ${ratio}%: 目標圏内`;
+          el.textContent = `達成率 ${ratio}%`;
           el.style.color = "#166534";
           return;
         }
 
         if (ratio >= 50) {
-          el.textContent = `達成度 ${ratio}%: 加速必要`;
+          el.textContent = `達成率 ${ratio}%`;
           el.style.color = "#b45309";
           return;
         }
 
-        el.textContent = `達成度 ${ratio}%: 立て直し要`;
+        el.textContent = `達成率 ${ratio}%`;
         el.style.color = "#b42318";
       };
 
-      const animateCount = (id, value) => {
-        const el = document.getElementById(id);
-        const target = toNumber(value);
 
-        if (!el) {
-          return;
+      const loadPostingCountFromDb = async () => {
+        if (!supabase || !districtName || !candidateName) {
+          return null;
         }
 
-        if (Number.isNaN(target) || target <= 0) {
-          el.textContent = "-";
-          return;
+        const { data, error } = await supabase
+          .from(SUPABASE_POSTING_TABLE)
+          .select("count")
+          .eq("district_name", districtName)
+          .eq("candidate_name", candidateName);
+
+        if (error) {
+          return null;
         }
 
-        const duration = 700;
-        const start = performance.now();
+        const rows = data ?? [];
+        if (rows.length === 0) {
+          return 0;
+        }
 
-        const tick = (now) => {
-          const progress = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          const current = Math.round(target * eased);
-          el.textContent = `${current.toLocaleString("ja-JP")}件`;
+        return rows.reduce((sum, row) => sum + (Number(row.count) || 0), 0);
+      };
 
-          if (progress < 1) {
-            requestAnimationFrame(tick);
-          }
+      const loadOtherKpiCountsFromDb = async () => {
+        if (!supabase || !districtName || !candidateName) {
+          return null;
+        }
+
+        const { data, error } = await supabase
+          .from(SUPABASE_ACTIVITY_TABLE)
+          .select("activity_kind, count")
+          .eq("district_name", districtName)
+          .eq("candidate_name", candidateName)
+          .in("activity_kind", ["greeting", "standing", "doublePoster", "speech"]);
+
+        if (error) {
+          return null;
+        }
+
+        const totals = {
+          greeting: 0,
+          standing: 0,
+          doublePoster: 0,
+          speech: 0,
         };
 
-        requestAnimationFrame(tick);
+        (data ?? []).forEach((row) => {
+          const kind = row.activity_kind;
+          const value = Number(row.count) || 0;
+          if (kind === "greeting") {
+            totals.greeting += value;
+          }
+          if (kind === "standing") {
+            totals.standing += value;
+          }
+          if (kind === "doublePoster") {
+            totals.doublePoster += value;
+          }
+          if (kind === "speech") {
+            totals.speech += value;
+          }
+        });
+
+        return totals;
+      };
+
+      const loadCandidateTargetsFromDb = async () => {
+        if (!supabase) {
+          return null;
+        }
+
+        const numericTileId = Number(tileId);
+        if (Number.isFinite(numericTileId) && numericTileId > 0) {
+          const { data, error } = await supabase
+            .from(SUPABASE_CANDIDATE_TABLE)
+            .select(
+              "posting_target, greeting_target, street_standing_target, double_poster_target, street_speech_hours_target"
+            )
+            .eq("id", numericTileId)
+            .limit(1)
+            .maybeSingle();
+
+          if (!error && data) {
+            return data;
+          }
+        }
+
+        const { data: district } = await supabase
+          .from(SUPABASE_DISTRICT_MASTER_TABLE)
+          .select("id")
+          .eq("district_name", districtName)
+          .limit(1)
+          .maybeSingle();
+
+        const { data: member } = await supabase
+          .from(SUPABASE_MEMBER_TABLE)
+          .select("id")
+          .eq("name", candidateName)
+          .limit(1)
+          .maybeSingle();
+
+        if (!district?.id || !member?.id) {
+          return null;
+        }
+
+        const { data } = await supabase
+          .from(SUPABASE_CANDIDATE_TABLE)
+          .select(
+            "posting_target, greeting_target, street_standing_target, double_poster_target, street_speech_hours_target"
+          )
+          .eq("district_id", district.id)
+          .eq("member_id", member.id)
+          .limit(1)
+          .maybeSingle();
+
+        return data ?? null;
+      };
+
+      const loadMemberCountFromDb = async () => {
+        if (!supabase) {
+          return null;
+        }
+
+        const { count, error } = await supabase
+          .from(SUPABASE_MEMBER_TABLE)
+          .select("id", { count: "exact", head: true });
+
+        if (error) {
+          return null;
+        }
+
+        return Number(count) || 0;
+      };
+
+      const setKpiTile = ({ key, current, target, unit = "count" }) => {
+        const countEl = document.getElementById(`${key}Count`);
+        const barEl = document.getElementById(`${key}Bar`);
+
+        if (!countEl || !barEl) {
+          return;
+        }
+
+        if (unit === "hours") {
+          countEl.textContent = `${current.toLocaleString("ja-JP", {
+            minimumFractionDigits: current % 1 === 0 ? 0 : 1,
+            maximumFractionDigits: 1,
+          })}時間`;
+        } else if (unit === "people") {
+          countEl.textContent = `${Math.round(current).toLocaleString("ja-JP")}名`;
+        } else {
+          countEl.textContent = `${Math.round(current).toLocaleString("ja-JP")}件`;
+        }
+
+        if (!Number.isFinite(target) || target <= 0) {
+          barEl.style.width = "8%";
+          setGoalPercentTrend(`${key}Trend`, current, target);
+          return;
+        }
+
+        const percent = Math.max(0, Math.round((current / target) * 100));
+        barEl.style.width = `${Math.max(8, Math.min(100, percent))}%`;
+        setGoalPercentTrend(`${key}Trend`, current, target);
       };
 
       document.getElementById("districtName").textContent = districtName;
       document.getElementById("electionType").textContent = electionType;
       document.getElementById("votingDate").textContent = `投票日 ${votingDate}`;
+      document.getElementById("notificationDate").textContent = `告示日 ${notificationDate}`;
       document.getElementById("daysLeft").textContent = daysLeft;
       document.getElementById("candidateName").textContent = candidateName;
-      document.getElementById("postingBar").style.width = `${toMeterWidth(postingCountRaw, 1500)}%`;
-      document.getElementById("greetingBar").style.width = `${toMeterWidth(greetingCountRaw, 1200)}%`;
       setUrgencyLevel(daysLeft);
-      setTrendText("postingTrend", postingCountRaw, 1500);
-      setTrendText("greetingTrend", greetingCountRaw, 1200);
-      animateCount("postingCount", postingCountRaw);
-      animateCount("greetingCount", greetingCountRaw);
+
+      const currentMetrics = {
+        posting: Number.isNaN(toNumber(postingCountRaw)) ? 0 : Math.max(0, toNumber(postingCountRaw)),
+        greeting: Number.isNaN(toNumber(greetingCountRaw)) ? 0 : Math.max(0, toNumber(greetingCountRaw)),
+        standing: Number.isNaN(toNumber(params.get("streetStandingCount") || "0"))
+          ? 0
+          : Math.max(0, toNumber(params.get("streetStandingCount") || "0")),
+        doublePoster: Number.isNaN(toNumber(params.get("doublePosterCount") || "0"))
+          ? 0
+          : Math.max(0, toNumber(params.get("doublePosterCount") || "0")),
+        speech: Number.isNaN(toNumber(params.get("streetSpeechHoursCount") || "0"))
+          ? 0
+          : Math.max(0, toNumber(params.get("streetSpeechHoursCount") || "0")),
+        member: 0,
+      };
+
+      const targetMetrics = {
+        posting: 0,
+        greeting: 0,
+        standing: 0,
+        doublePoster: 0,
+        speech: 0,
+        member: 0,
+      };
+
+      const renderAllKpis = () => {
+        setKpiTile({
+          key: "posting",
+          current: currentMetrics.posting,
+          target: targetMetrics.posting,
+          unit: "count",
+        });
+        setKpiTile({
+          key: "greeting",
+          current: currentMetrics.greeting,
+          target: targetMetrics.greeting,
+          unit: "count",
+        });
+        setKpiTile({
+          key: "standing",
+          current: currentMetrics.standing,
+          target: targetMetrics.standing,
+          unit: "count",
+        });
+        setKpiTile({
+          key: "doublePoster",
+          current: currentMetrics.doublePoster,
+          target: targetMetrics.doublePoster,
+          unit: "count",
+        });
+        setKpiTile({
+          key: "speech",
+          current: currentMetrics.speech,
+          target: targetMetrics.speech,
+          unit: "hours",
+        });
+        setKpiTile({
+          key: "member",
+          current: currentMetrics.member,
+          target: targetMetrics.member,
+          unit: "people",
+        });
+      };
+
+      renderAllKpis();
+
+      void (async () => {
+        const [dbPostingCount, dbOtherCounts, candidateTargets, memberCount] = await Promise.all([
+          loadPostingCountFromDb(),
+          loadOtherKpiCountsFromDb(),
+          loadCandidateTargetsFromDb(),
+          loadMemberCountFromDb(),
+        ]);
+
+        if (dbPostingCount !== null) {
+          currentMetrics.posting = dbPostingCount;
+        }
+
+        if (dbOtherCounts) {
+          currentMetrics.greeting = Number(dbOtherCounts.greeting) || 0;
+          currentMetrics.standing = Number(dbOtherCounts.standing) || 0;
+          currentMetrics.doublePoster = Number(dbOtherCounts.doublePoster) || 0;
+          currentMetrics.speech = Number(dbOtherCounts.speech) || 0;
+        }
+
+        if (candidateTargets) {
+          targetMetrics.posting = Number(candidateTargets.posting_target) || 0;
+          targetMetrics.greeting = Number(candidateTargets.greeting_target) || 0;
+          targetMetrics.standing = Number(candidateTargets.street_standing_target) || 0;
+          targetMetrics.doublePoster = Number(candidateTargets.double_poster_target) || 0;
+          targetMetrics.speech = Number(candidateTargets.street_speech_hours_target) || 0;
+        }
+
+        if (memberCount !== null) {
+          currentMetrics.member = Math.max(0, Number(memberCount) || 0);
+        }
+
+        renderAllKpis();
+      })();
+
+      const postingLink = document.getElementById("openPostingInputBtn");
+      if (postingLink) {
+        const inputParams = new URLSearchParams({
+          districtName,
+          tileId,
+          candidateName,
+          date: votingDate !== "-" ? votingDate : "",
+          notificationDate: notificationDate !== "-" ? notificationDate : "",
+          votingDate: votingDate !== "-" ? votingDate : "",
+          electionType,
+          daysLeft,
+          candidatePhotoUrl,
+          greetingCount: String(currentMetrics.greeting),
+        });
+        postingLink.href = `posting-count-entry.html?${inputParams.toString()}`;
+      }
+
+      const buildRegisterParams = () =>
+        new URLSearchParams({
+          districtName,
+          tileId,
+          candidateName,
+          date: votingDate !== "-" ? votingDate : "",
+          notificationDate: notificationDate !== "-" ? notificationDate : "",
+          votingDate: votingDate !== "-" ? votingDate : "",
+          electionType,
+          daysLeft,
+          candidatePhotoUrl,
+          greetingCount: String(currentMetrics.greeting),
+        });
+
+      const openRegisterPage = (kind) => {
+        if (kind === "member") {
+          const supporterParams = buildRegisterParams();
+          window.location.href = `supporter-registration.html?${supporterParams.toString()}`;
+          return;
+        }
+
+        const paramsForInput = buildRegisterParams();
+        paramsForInput.set("kpiType", kind);
+        window.location.href = `posting-count-entry.html?${paramsForInput.toString()}`;
+      };
+
+      document.querySelectorAll(".kpi-card.clickable[data-register-kind]").forEach((card) => {
+        const kind = card.getAttribute("data-register-kind") || "posting";
+        card.addEventListener("click", (event) => {
+          const target = event.target;
+          if (target instanceof HTMLElement && target.closest("a")) {
+            return;
+          }
+          openRegisterPage(kind);
+        });
+
+        card.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" && event.key !== " ") {
+            return;
+          }
+          event.preventDefault();
+          openRegisterPage(kind);
+        });
+      });
 
       const photo = document.getElementById("candidatePhoto");
       const photoPlaceholder = document.getElementById("candidatePhotoPlaceholder");
