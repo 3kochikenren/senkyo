@@ -867,7 +867,7 @@ if (els.districtGroupList) {
       greetingCount: String(kpi.greetingCount),
     });
 
-    window.open(`candidate-board.html?${params.toString()}`, "_blank", "noopener");
+    window.location.href = `candidate-board.html?${params.toString()}`;
 
     state.selectedDistrictTileId = tileId;
     updateView(false);
