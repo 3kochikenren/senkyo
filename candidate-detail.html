@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>候補者詳細</title>
+    <style>
+      :root {
+        --bg: #f4ecdf;
+        --card: #fffdf8;
+        --line: #e4d3b4;
+        --text: #1f1b14;
+        --muted: #6c6356;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background: linear-gradient(180deg, #f8f4ec 0%, var(--bg) 100%);
+        display: grid;
+        place-items: center;
+        padding: 18px;
+      }
+
+      .detail {
+        width: min(720px, 100%);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--card);
+        box-shadow: 0 16px 32px rgba(70, 50, 20, 0.08);
+        padding: 22px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.45rem;
+      }
+
+      .back {
+        border: 1px solid #d5c5a6;
+        border-radius: 999px;
+        background: #fff6e7;
+        color: #3a2b14;
+        font-weight: 700;
+        padding: 8px 14px;
+        cursor: pointer;
+      }
+
+      .grid {
+        margin-top: 16px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .item {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #fff;
+        padding: 12px;
+      }
+
+      .label {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .value {
+        margin: 4px 0 0;
+        font-weight: 700;
+        font-size: 1.08rem;
+      }
+
+      .photo {
+        margin-top: 14px;
+        width: 180px;
+        height: 128px;
+        object-fit: cover;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="detail">
+      <div class="header">
+        <h1>候補者タイル詳細</h1>
+        <button class="back" type="button" onclick="window.close()">閉じる</button>
+      </div>
+
+      <section class="grid">
+        <article class="item">
+          <p class="label">候補者名</p>
+          <p id="candidateName" class="value">-</p>
+        </article>
+        <article class="item">
+          <p class="label">選挙区</p>
+          <p id="districtName" class="value">-</p>
+        </article>
+        <article class="item">
+          <p class="label">選挙種別</p>
+          <p id="electionType" class="value">-</p>
+        </article>
+        <article class="item">
+          <p class="label">投票日</p>
+          <p id="votingDate" class="value">-</p>
+        </article>
+        <article class="item">
+          <p class="label">告示日まであと</p>
+          <p id="daysLeft" class="value">-</p>
+        </article>
+      </section>
+
+      <img id="candidatePhoto" class="photo" alt="候補者写真" hidden />
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.textContent = value || "-";
+        }
+      };
+
+      setText("candidateName", params.get("candidateName") || "候補者 未設定");
+      setText("districtName", params.get("districtName") || "-");
+      setText("electionType", params.get("electionType") || "-");
+      setText("votingDate", params.get("votingDate") || "-");
+      setText("daysLeft", params.get("daysLeft") || "-");
+
+      const photoUrl = params.get("candidatePhotoUrl") || "";
+      const photo = document.getElementById("candidatePhoto");
+      if (photo && photoUrl) {
+        photo.src = photoUrl;
+        photo.hidden = false;
+      }
+    </script>
+  </body>
+</html>

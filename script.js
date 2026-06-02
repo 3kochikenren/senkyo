@@ -152,18 +152,50 @@ function calcDaysLeftToNotification(notificationDate) {
   return Math.max(diff, 0);
 }
 
-function getFallbackTiles(campaign, selectedCandidate) {
-  return [
-    {
-      id: campaign.id,
-      districtName: campaign.district,
-      electionType: campaign.electionType,
-      votingDate: campaign.electionDate,
-      daysLeft: campaign.daysLeft,
-      candidateName: selectedCandidate?.name ?? "候補者 未設定",
-      candidatePhotoUrl: "",
-    },
-  ];
+function getFallbackTiles(campaign) {
+  if (!Array.isArray(campaign.candidates) || campaign.candidates.length === 0) {
+    return [
+      {
+        id: `${campaign.id}-none`,
+        districtName: campaign.district,
+        electionType: campaign.electionType,
+        votingDate: campaign.electionDate,
+        daysLeft: campaign.daysLeft,
+        candidateName: "候補者 未設定",
+        candidatePhotoUrl: "",
+      },
+    ];
+  }
+
+  return campaign.candidates.map((candidate) => ({
+    id: `${campaign.id}-${candidate.id}`,
+    districtName: campaign.district,
+    electionType: campaign.electionType,
+    votingDate: campaign.electionDate,
+    daysLeft: campaign.daysLeft,
+    candidateName: candidate.name ?? "候補者 未設定",
+    candidatePhotoUrl: "",
+  }));
+}
+
+function getCurrentDisplayTiles() {
+  const campaign = getCampaign();
+  return state.upcomingElectionTiles.length > 0 ? state.upcomingElectionTiles : getFallbackTiles(campaign);
+}
+
+function getBoardKpiByDistrict(districtName) {
+  const campaign = campaigns.find(
+    (item) => districtName.includes(item.district) || item.district.includes(districtName),
+  );
+
+  if (!campaign) {
+    return { postingCount: "-", greetingCount: "-" };
+  }
+
+  return {
+    postingCount: String(campaign.postingCount ?? "-"),
+    greetingCount: String(campaign.greetingCount ?? "-"),
+  };
 }
 
 function toSubmission(entry) {
@@ -551,21 +583,6 @@ function renderRecentDistrictMasters() {
     .join("");
 }
 
-function getDistrictKpi(districtName) {
-  const campaign = campaigns.find(
-    (item) => districtName.includes(item.district) || item.district.includes(districtName),
-  );
-
-  if (!campaign) {
-    return { posting: "-", greeting: "-" };
-  }
-
-  return {
-    posting: String(campaign.postingCount),
-    greeting: String(campaign.greetingCount),
-  };
-}
-
 function renderDistrictGroupCards(tiles) {
   if (!els.districtGroupList) {
     return;
@@ -576,7 +593,6 @@ function renderDistrictGroupCards(tiles) {
   els.districtGroupList.innerHTML = tiles
     .map((tile, index) => {
       const colorClass = colorClasses[index % colorClasses.length];
-      const kpi = getDistrictKpi(tile.districtName);
       const isExpanded = String(tile.id) === String(state.selectedDistrictTileId);
       const candidatePhoto = tile.candidatePhotoUrl
         ? `<img class="district-portrait-image" src="${escapeHtml(tile.candidatePhotoUrl)}" alt="候補者写真" />`
@@ -594,7 +610,7 @@ function renderDistrictGroupCards(tiles) {
                   <span class="district-name">${escapeHtml(tile.districtName)}</span>
                   <span class="district-election-type">${escapeHtml(tile.electionType || "")}</span>
                 </h2>
-                <p class="district-election-date">投票予定日 ${escapeHtml(tile.votingDate)}</p>
+                <p class="district-election-date">投票日 ${escapeHtml(tile.votingDate)}</p>
               </div>
 
               <div class="district-portrait-wrap">
@@ -614,16 +630,6 @@ function renderDistrictGroupCards(tiles) {
               </div>
             </div>
 
-            <div class="district-side-col">
-              <article class="district-mini-tile">
-                <p>ポスティング</p>
-                <strong>${escapeHtml(kpi.posting)}</strong>
-              </article>
-              <article class="district-mini-tile">
-                <p>挨拶</p>
-                <strong>${escapeHtml(kpi.greeting)}</strong>
-              </article>
-            </div>
           </div>
         </article>
       `;
@@ -823,7 +829,7 @@ function updateView(syncForm = true) {
   const tiles =
     state.upcomingElectionTiles.length > 0
       ? state.upcomingElectionTiles
-      : getFallbackTiles(campaign, selectedCandidate);
+      : getFallbackTiles(campaign);
 
   if (!state.selectedDistrictTileId && tiles.length > 0) {
     state.selectedDistrictTileId = String(tiles[0].id);
@@ -888,6 +894,27 @@ if (els.districtGroupList) {
     if (!tileId) {
       return;
     }
+
+    const selectedTile = getCurrentDisplayTiles().find((item) => String(item.id) === String(tileId));
+    if (!selectedTile) {
+      return;
+    }
+
+    const kpi = getBoardKpiByDistrict(String(selectedTile.districtName ?? ""));
+
+    const params = new URLSearchParams({
+      tileId: String(selectedTile.id ?? ""),
+      districtName: String(selectedTile.districtName ?? ""),
+      candidateName: String(selectedTile.candidateName ?? ""),
+      electionType: String(selectedTile.electionType ?? ""),
+      votingDate: String(selectedTile.votingDate ?? ""),
+      daysLeft: String(selectedTile.daysLeft ?? ""),
+      candidatePhotoUrl: String(selectedTile.candidatePhotoUrl ?? ""),
+      postingCount: String(kpi.postingCount),
+      greetingCount: String(kpi.greetingCount),
+    });
+
+    window.open(`candidate-board.html?${params.toString()}`, "_blank", "noopener");
 
     state.selectedDistrictTileId = tileId;
     updateView(false);

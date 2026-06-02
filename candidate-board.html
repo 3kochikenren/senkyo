@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>候補者ボード</title>
+    <style>
+      :root {
+        --bg: #f2eadf;
+        --bg-2: #ece1d0;
+        --text: #1d1b16;
+        --muted: #6a6256;
+        --line: rgba(92, 73, 38, 0.16);
+        --shadow: 0 18px 48px rgba(72, 54, 21, 0.08);
+        --dark: #1f2430;
+        --danger: #b42318;
+        --danger-soft: rgba(180, 35, 24, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(201, 138, 50, 0.24), transparent 28%),
+          radial-gradient(circle at top right, rgba(84, 103, 173, 0.18), transparent 26%),
+          linear-gradient(180deg, #f8f4ec 0%, #f2eadf 42%, #ece1d0 100%);
+      }
+
+      .page {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+      }
+
+      .frame {
+        min-height: calc(100vh - 64px);
+      }
+
+      .topbar {
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+        color: #fff;
+        background: linear-gradient(135deg, #1f2430 0%, #222d44 100%);
+        min-height: 112px;
+        padding: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: rgba(255, 239, 208, 0.82);
+        font-size: 0.75rem;
+        letter-spacing: 0.35em;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .title-link {
+        display: inline-block;
+        margin-top: 8px;
+        color: #fff;
+        text-decoration: none;
+        font-size: clamp(2rem, 3vw, 3.6rem);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+      }
+
+      .settings-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 88px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        color: #fff8ea;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        background: rgba(255, 255, 255, 0.12);
+        transition: background 0.2s ease, transform 0.2s ease;
+      }
+
+      .settings-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+      }
+
+      .board {
+        margin-top: 16px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+        background: rgba(255, 255, 255, 0.82);
+        padding: 24px;
+      }
+
+      .board-grid {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: minmax(240px, 0.95fr) minmax(300px, 1.2fr) minmax(260px, 1fr);
+      }
+
+      .panel {
+        border: 1px solid rgba(92, 73, 38, 0.14);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.88);
+        padding: 18px;
+      }
+
+      .urgent-panel {
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(251, 244, 234, 0.94) 100%),
+          radial-gradient(circle at 24% 18%, var(--danger-soft), transparent 36%);
+      }
+
+      .urgent-panel.level-safe {
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(236, 248, 242, 0.94) 100%),
+          radial-gradient(circle at 24% 18%, rgba(16, 185, 129, 0.16), transparent 36%);
+      }
+
+      .urgent-panel.level-warn {
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 243, 220, 0.94) 100%),
+          radial-gradient(circle at 24% 18%, rgba(245, 158, 11, 0.18), transparent 36%);
+      }
+
+      .urgent-panel.level-critical {
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(254, 229, 226, 0.93) 100%),
+          radial-gradient(circle at 24% 18%, rgba(180, 35, 24, 0.24), transparent 36%);
+      }
+
+      .urgent-label {
+        margin: 0;
+        font-size: 0.72rem;
+        color: #8f7361;
+        letter-spacing: 0.14em;
+        font-weight: 700;
+      }
+
+      .days-value {
+        margin: 8px 0 4px;
+        font-size: clamp(4.8rem, 9vw, 7.8rem);
+        line-height: 0.82;
+        font-weight: 900;
+        color: #211d17;
+        text-shadow: 0 2px 0 rgba(255, 255, 255, 0.7);
+      }
+
+      .days-caption {
+        margin: 0;
+        font-size: 0.92rem;
+        color: #4f8a63;
+        font-weight: 700;
+      }
+
+      .urgent-panel.level-warn .days-caption {
+        color: #9a6700;
+      }
+
+      .urgent-panel.level-critical .days-caption {
+        color: var(--danger);
+      }
+
+      .pulse {
+        margin-top: 14px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(16, 185, 129, 0.2);
+        overflow: hidden;
+      }
+
+      .pulse::after {
+        content: "";
+        display: block;
+        width: 38%;
+        height: 100%;
+        background: linear-gradient(90deg, #10b981 0%, #047857 100%);
+        animation: none;
+        transform: translateX(0);
+      }
+
+      .urgent-panel.level-warn .pulse {
+        background: rgba(245, 158, 11, 0.2);
+      }
+
+      .urgent-panel.level-warn .pulse::after {
+        background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+      }
+
+      .urgent-panel.level-critical .pulse {
+        background: rgba(180, 35, 24, 0.2);
+      }
+
+      .urgent-panel.level-critical .pulse::after {
+        background: linear-gradient(90deg, #ef4444 0%, #b42318 100%);
+      }
+
+      .candidate-panel .district-line {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
+
+      .district {
+        margin: 0;
+        font-size: 2.45rem;
+        line-height: 1;
+        font-weight: 800;
+      }
+
+      .election-type {
+        margin-top: 6px;
+        font-size: 0.78rem;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .voting-date {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 0.74rem;
+        letter-spacing: 0.08em;
+      }
+
+      .portrait-wrap {
+        margin-top: 14px;
+      }
+
+      .candidate-name {
+        margin: 0 0 8px;
+        color: #413729;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .portrait {
+        width: min(100%, 420px);
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        display: block;
+        border-radius: 18px;
+        border: 1px solid rgba(54, 68, 95, 0.28);
+        box-shadow: 0 16px 30px rgba(31, 36, 48, 0.24);
+      }
+
+      .portrait-placeholder {
+        width: min(100%, 420px);
+        aspect-ratio: 4 / 3;
+        border: 1px solid #d8c6a7;
+        background: linear-gradient(180deg, #f9ecd4 0%, #ecd8b2 100%);
+        color: #3d2f18;
+        font-size: 1rem;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        border-radius: 18px;
+      }
+
+      .kpi-panel {
+        display: grid;
+        gap: 14px;
+      }
+
+      .kpi-card {
+        border-radius: 18px;
+        border: 1px solid rgba(92, 73, 38, 0.14);
+        background: #fff9ee;
+        padding: 16px;
+      }
+
+      .kpi-label {
+        margin: 0;
+        color: #665942;
+        font-size: 0.86rem;
+        font-weight: 700;
+      }
+
+      .kpi-value {
+        margin: 8px 0 0;
+        font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+        font-weight: 900;
+        color: #1f2430;
+        line-height: 1;
+      }
+
+      .kpi-meter {
+        margin-top: 12px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(31, 36, 48, 0.12);
+        overflow: hidden;
+      }
+
+      .kpi-meter-bar {
+        height: 100%;
+        width: 0%;
+        border-radius: inherit;
+        transition: width 0.35s ease;
+      }
+
+      .kpi-meter-bar.posting {
+        background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+      }
+
+      .kpi-meter-bar.greeting {
+        background: linear-gradient(90deg, #10b981 0%, #047857 100%);
+      }
+
+      .kpi-note {
+        margin: 10px 0 0;
+        font-size: 0.74rem;
+        color: #7a705f;
+      }
+
+      .kpi-trend {
+        margin: 8px 0 0;
+        font-size: 0.76rem;
+        font-weight: 700;
+        color: #385d4d;
+      }
+
+      @media (max-width: 720px) {
+        .topbar {
+          padding: 18px;
+          min-height: 96px;
+        }
+
+        .title-link {
+          font-size: 1.9rem;
+        }
+
+        .board {
+          padding: 16px;
+        }
+
+        .board-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .district {
+          font-size: 2.1rem;
+        }
+
+        .candidate-panel .district-line {
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .days-value {
+          font-size: 4.6rem;
+        }
+      }
+
+      @keyframes pulseMove {
+        0% {
+          transform: translateX(-30%);
+          opacity: 0.55;
+        }
+        50% {
+          transform: translateX(80%);
+          opacity: 1;
+        }
+        100% {
+          transform: translateX(220%);
+          opacity: 0.55;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="frame">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">ELECTION CONTROL CENTER</p>
+            <a class="title-link" href="index.html">選挙対策本部ポータル</a>
+          </div>
+          <a class="settings-btn" href="settings.html">設定</a>
+        </header>
+
+        <section class="board">
+          <div class="board-grid">
+            <section class="panel urgent-panel">
+              <p class="urgent-label">あと何日？</p>
+              <p class="days-value" id="daysLeft">0</p>
+              <p class="days-caption" id="daysCaption">告示までの残り日数</p>
+              <div class="pulse" aria-hidden="true"></div>
+            </section>
+
+            <section class="panel candidate-panel">
+              <div class="district-line">
+                <h1 class="district" id="districtName">選挙区</h1>
+                <span class="election-type" id="electionType">-</span>
+              </div>
+              <p class="voting-date" id="votingDate">投票日 -</p>
+              <div class="portrait-wrap">
+                <p class="candidate-name" id="candidateName">候補者名</p>
+                <img id="candidatePhoto" class="portrait" src="" alt="候補者写真" />
+                <div id="candidatePhotoPlaceholder" class="portrait-placeholder">候補者写真</div>
+              </div>
+            </section>
+
+            <section class="kpi-panel">
+              <article class="kpi-card">
+                <p class="kpi-label">ポスティング件数</p>
+                <p class="kpi-value" id="postingCount">-</p>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div id="postingBar" class="kpi-meter-bar posting"></div>
+                </div>
+                <p class="kpi-trend" id="postingTrend">稼働データを算出中</p>
+                <p class="kpi-note">目標到達に向けた稼働状況</p>
+              </article>
+
+              <article class="kpi-card">
+                <p class="kpi-label">挨拶訪問件数</p>
+                <p class="kpi-value" id="greetingCount">-</p>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div id="greetingBar" class="kpi-meter-bar greeting"></div>
+                </div>
+                <p class="kpi-trend" id="greetingTrend">稼働データを算出中</p>
+                <p class="kpi-note">対話接点の広がりを可視化</p>
+              </article>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+
+      const districtName = params.get("districtName") || "選挙区";
+      const electionType = params.get("electionType") || "全域対象";
+      const votingDate = params.get("votingDate") || "-";
+      const daysLeft = params.get("daysLeft") || "0";
+      const candidateName = params.get("candidateName") || "候補者 未設定";
+      const candidatePhotoUrl = params.get("candidatePhotoUrl") || "";
+      const postingCountRaw = params.get("postingCount") || "-";
+      const greetingCountRaw = params.get("greetingCount") || "-";
+
+      const toNumber = (value) => {
+        const parsed = Number(String(value).replace(/[^0-9]/g, ""));
+        return Number.isFinite(parsed) ? parsed : NaN;
+      };
+
+      const formatCount = (value) => {
+        const num = toNumber(value);
+        if (Number.isNaN(num) || num <= 0) {
+          return "-";
+        }
+        return `${num.toLocaleString("ja-JP")}件`;
+      };
+
+      const toMeterWidth = (value, max) => {
+        const num = toNumber(value);
+        if (Number.isNaN(num) || num <= 0) {
+          return 8;
+        }
+        return Math.max(8, Math.min(100, Math.round((num / max) * 100)));
+      };
+
+      const setUrgencyLevel = (value) => {
+        const panel = document.querySelector(".urgent-panel");
+        const caption = document.getElementById("daysCaption");
+        const num = Number(value);
+
+        if (!panel || !caption || !Number.isFinite(num)) {
+          return;
+        }
+
+        panel.classList.remove("level-safe", "level-warn", "level-critical");
+
+        if (num <= 14) {
+          panel.classList.add("level-critical");
+          caption.textContent = "最終局面: 緊急対応フェーズ";
+          return;
+        }
+
+        if (num <= 45) {
+          panel.classList.add("level-warn");
+          caption.textContent = "重点強化期間: 追い込みフェーズ";
+          return;
+        }
+
+        panel.classList.add("level-safe");
+        caption.textContent = "基盤構築期間: 先行展開フェーズ";
+      };
+
+      const setTrendText = (id, value, max) => {
+        const el = document.getElementById(id);
+        const num = toNumber(value);
+        if (!el) {
+          return;
+        }
+
+        if (Number.isNaN(num) || num <= 0) {
+          el.textContent = "データ未投入";
+          el.style.color = "#8a7860";
+          return;
+        }
+
+        const ratio = Math.round((num / max) * 100);
+        if (ratio >= 80) {
+          el.textContent = `達成度 ${ratio}%: 目標圏内`;
+          el.style.color = "#166534";
+          return;
+        }
+
+        if (ratio >= 50) {
+          el.textContent = `達成度 ${ratio}%: 加速必要`;
+          el.style.color = "#b45309";
+          return;
+        }
+
+        el.textContent = `達成度 ${ratio}%: 立て直し要`;
+        el.style.color = "#b42318";
+      };
+
+      const animateCount = (id, value) => {
+        const el = document.getElementById(id);
+        const target = toNumber(value);
+
+        if (!el) {
+          return;
+        }
+
+        if (Number.isNaN(target) || target <= 0) {
+          el.textContent = "-";
+          return;
+        }
+
+        const duration = 700;
+        const start = performance.now();
+
+        const tick = (now) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = Math.round(target * eased);
+          el.textContent = `${current.toLocaleString("ja-JP")}件`;
+
+          if (progress < 1) {
+            requestAnimationFrame(tick);
+          }
+        };
+
+        requestAnimationFrame(tick);
+      };
+
+      document.getElementById("districtName").textContent = districtName;
+      document.getElementById("electionType").textContent = electionType;
+      document.getElementById("votingDate").textContent = `投票日 ${votingDate}`;
+      document.getElementById("daysLeft").textContent = daysLeft;
+      document.getElementById("candidateName").textContent = candidateName;
+      document.getElementById("postingBar").style.width = `${toMeterWidth(postingCountRaw, 1500)}%`;
+      document.getElementById("greetingBar").style.width = `${toMeterWidth(greetingCountRaw, 1200)}%`;
+      setUrgencyLevel(daysLeft);
+      setTrendText("postingTrend", postingCountRaw, 1500);
+      setTrendText("greetingTrend", greetingCountRaw, 1200);
+      animateCount("postingCount", postingCountRaw);
+      animateCount("greetingCount", greetingCountRaw);
+
+      const photo = document.getElementById("candidatePhoto");
+      const photoPlaceholder = document.getElementById("candidatePhotoPlaceholder");
+      if (candidatePhotoUrl) {
+        photo.src = candidatePhotoUrl;
+        if (photoPlaceholder) {
+          photoPlaceholder.style.display = "none";
+        }
+      } else {
+        photo.alt = "候補者写真なし";
+        photo.style.display = "none";
+        if (photoPlaceholder) {
+          photoPlaceholder.style.display = "flex";
+        }
+      }
+    </script>
+  </body>
+</html>

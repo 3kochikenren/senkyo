@@ -90,22 +90,27 @@ input {
 
 .district-card {
   margin-top: 16px;
-  padding: 22px;
+  padding: 0;
   display: grid;
-  gap: 18px;
-  background: rgba(255, 255, 255, 0.9);
+  gap: 14px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .district-layout {
   display: grid;
   gap: 16px;
-  grid-template-columns: minmax(260px, 1.5fr) minmax(200px, 1fr);
+  grid-template-columns: 1fr;
   align-items: start;
 }
 
 .district-group-list {
   display: grid;
   gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 360px));
+  justify-content: start;
+  align-items: start;
 }
 
 .district-group-card {
@@ -130,7 +135,7 @@ input {
 }
 
 .district-group-card.expanded .district-layout {
-  grid-template-columns: minmax(260px, 1.5fr) minmax(200px, 1fr);
+  grid-template-columns: 1fr;
 }
 
 .district-group-card.expanded .district-side-col {
@@ -143,10 +148,19 @@ input {
 }
 
 .district-tile {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 14px;
   border: 1px solid #e2d0b0;
   border-radius: 22px;
   background: #fffdf8;
   padding: 12px;
+}
+
+.district-card-copy {
+  width: 100%;
+  text-align: center;
 }
 
 .district-card-copy h2 {
@@ -158,6 +172,7 @@ input {
   display: flex;
   gap: 12px;
   align-items: baseline;
+  justify-content: center;
   white-space: nowrap;
 }
 
@@ -183,6 +198,7 @@ input {
 .district-portrait-wrap {
   display: grid;
   gap: 14px;
+  justify-items: center;
 }
 
 .district-portrait {
@@ -486,7 +502,7 @@ input {
 }
 
 .workspace {
-  display: grid;
+  display: none;
   gap: 20px;
   margin-top: 16px;
 }
