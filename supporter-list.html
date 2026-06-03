@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>後援会員一覧</title>
+    <meta name="description" content="後援会員を検索・一覧表示する画面です。" />
+    <link rel="stylesheet" href="supporter-list.css" />
+  </head>
+  <body>
+    <main class="supporter-list-shell">
+      <section class="supporter-list-card">
+        <header class="supporter-list-header">
+          <div>
+            <p class="eyebrow">Supporter List</p>
+            <h1>後援会員一覧</h1>
+            <p class="lead">候補者を選択して、登録済みの後援会員を検索・表示します。</p>
+          </div>
+          <a class="settings-back-btn" href="settings.html">設定へ戻る</a>
+        </header>
+
+        <div class="actions-toolbar">
+            <a href="supporter-registration.html" class="new-registration-btn">新規登録</a>
+        </div>
+
+        <form id="searchForm" class="search-form">
+          <div class="form-grid">
+            <label>
+              <span>候補者名（必須）</span>
+              <select id="candidateSelect" required>
+                <option value="">選択してください</option>
+              </select>
+            </label>
+            <label>
+              <span>名前（含み一致）</span>
+              <input id="searchName" type="text" />
+            </label>
+            <label>
+              <span>住所（含み一致）</span>
+              <input id="searchAddress" type="text" />
+            </label>
+          </div>
+          <div class="actions">
+            <button id="searchBtn" type="submit">検索</button>
+          </div>
+        </form>
+
+        <div class="results-section">
+          <h2>検索結果</h2>
+          <div id="listStatus" class="status">候補者を選択して検索してください。</div>
+          <div id="supporterList" class="supporter-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="supporter-list.js"></script>
+  </body>
+</html>
