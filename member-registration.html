@@ -33,6 +33,13 @@
             <h2 id="memberPanelTitle">メンバーを追加</h2>
             <form id="memberForm" class="member-form">
               <label>
+                <span>区分</span>
+                <select id="memberRoleInput">
+                  <option value="使用者">使用者</option>
+                  <option value="管理者">管理者</option>
+                </select>
+              </label>
+              <label>
                 <span>名前</span>
                 <input id="memberNameInput" type="text" placeholder="山田 太郎" />
               </label>
@@ -45,7 +52,7 @@
                 <input id="memberMobileInput" type="text" placeholder="090-1234-5678" />
               </label>
               <label>
-                <span>メールアドレス</span>
+                <span>メールアドレス（gmailを入力してください）</span>
                 <input id="memberEmailInput" type="email" placeholder="example@example.jp" />
               </label>
               <label>

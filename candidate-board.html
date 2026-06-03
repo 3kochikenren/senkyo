@@ -180,6 +180,7 @@
         font-weight: 900;
         color: #211d17;
         text-shadow: 0 2px 0 rgba(255, 255, 255, 0.7);
+        text-align: center;
       }
 
       .days-caption {
@@ -260,6 +261,30 @@
 
       .portrait-wrap {
         margin-top: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .volunteer-recruit-btn {
+        margin-top: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: min(100%, 420px);
+        border: 1px solid #c85b0f;
+        border-radius: 999px;
+        background: #e9781d;
+        color: #fff8ea;
+        font-weight: 700;
+        text-decoration: none;
+        padding: 10px 16px;
+        transition: background 0.2s ease, transform 0.2s ease;
+      }
+
+      .volunteer-recruit-btn:hover {
+        background: #d86a11;
+        transform: translateY(-1px);
       }
 
       .candidate-name {
@@ -330,6 +355,38 @@
         font-weight: 900;
         color: #1f2430;
         line-height: 1;
+      }
+
+      .kpi-value-row {
+        margin-top: 8px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .kpi-side-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+        margin-top: 2px;
+      }
+
+      .kpi-shortage {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 400;
+        color: #6a6256;
+        white-space: nowrap;
+      }
+
+      .kpi-daily {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 400;
+        color: #7a705f;
+        white-space: nowrap;
       }
 
       .kpi-meter {
@@ -486,13 +543,20 @@
                 <p class="candidate-name" id="candidateName">候補者名</p>
                 <img id="candidatePhoto" class="portrait" src="" alt="候補者写真" />
                 <div id="candidatePhotoPlaceholder" class="portrait-placeholder">候補者写真</div>
+                <a id="openVolunteerRecruitBtn" class="volunteer-recruit-btn" href="volunteer-recruitment.html">ボランティア募集</a>
               </div>
             </section>
 
             <section class="kpi-panel">
               <article class="kpi-card clickable" data-register-kind="greeting" role="button" tabindex="0" aria-label="あいさつ件数の登録画面を開く">
                 <p class="kpi-label">あいさつ件数</p>
-                <p class="kpi-value" id="greetingCount">-</p>
+                <div class="kpi-value-row">
+                  <p class="kpi-value" id="greetingCount">-</p>
+                  <div class="kpi-side-meta">
+                    <p class="kpi-shortage" id="greetingShortage">不足 --</p>
+                    <p class="kpi-daily" id="greetingDaily">1日 --</p>
+                  </div>
+                </div>
                 <div class="kpi-meter" aria-hidden="true">
                   <div id="greetingBar" class="kpi-meter-bar greeting"></div>
                 </div>
@@ -502,7 +566,13 @@
 
               <article class="kpi-card clickable" data-register-kind="posting" role="button" tabindex="0" aria-label="ポスティング件数の登録画面を開く">
                 <p class="kpi-label">ポスティング件数</p>
-                <p class="kpi-value" id="postingCount">-</p>
+                <div class="kpi-value-row">
+                  <p class="kpi-value" id="postingCount">-</p>
+                  <div class="kpi-side-meta">
+                    <p class="kpi-shortage" id="postingShortage">不足 --</p>
+                    <p class="kpi-daily" id="postingDaily">1日 --</p>
+                  </div>
+                </div>
                 <div class="kpi-meter" aria-hidden="true">
                   <div id="postingBar" class="kpi-meter-bar posting"></div>
                 </div>
@@ -512,7 +582,13 @@
 
               <article class="kpi-card clickable" data-register-kind="standing" role="button" tabindex="0" aria-label="辻立ち件数の登録画面を開く">
                 <p class="kpi-label">辻立ち</p>
-                <p class="kpi-value" id="standingCount">-</p>
+                <div class="kpi-value-row">
+                  <p class="kpi-value" id="standingCount">-</p>
+                  <div class="kpi-side-meta">
+                    <p class="kpi-shortage" id="standingShortage">不足 --</p>
+                    <p class="kpi-daily" id="standingDaily">1日 --</p>
+                  </div>
+                </div>
                 <div class="kpi-meter" aria-hidden="true">
                   <div id="standingBar" class="kpi-meter-bar standing"></div>
                 </div>
@@ -522,7 +598,13 @@
 
               <article class="kpi-card clickable" data-register-kind="doublePoster" role="button" tabindex="0" aria-label="2連ポスター件数の登録画面を開く">
                 <p class="kpi-label">２連ポスター</p>
-                <p class="kpi-value" id="doublePosterCount">-</p>
+                <div class="kpi-value-row">
+                  <p class="kpi-value" id="doublePosterCount">-</p>
+                  <div class="kpi-side-meta">
+                    <p class="kpi-shortage" id="doublePosterShortage">不足 --</p>
+                    <p class="kpi-daily" id="doublePosterDaily">1日 --</p>
+                  </div>
+                </div>
                 <div class="kpi-meter" aria-hidden="true">
                   <div id="doublePosterBar" class="kpi-meter-bar double-poster"></div>
                 </div>
@@ -532,7 +614,13 @@
 
               <article class="kpi-card clickable" data-register-kind="speech" role="button" tabindex="0" aria-label="街宣時間の登録画面を開く">
                 <p class="kpi-label">街宣時間</p>
-                <p class="kpi-value" id="speechCount">-</p>
+                <div class="kpi-value-row">
+                  <p class="kpi-value" id="speechCount">-</p>
+                  <div class="kpi-side-meta">
+                    <p class="kpi-shortage" id="speechShortage">不足 --</p>
+                    <p class="kpi-daily" id="speechDaily">1日 --</p>
+                  </div>
+                </div>
                 <div class="kpi-meter" aria-hidden="true">
                   <div id="speechBar" class="kpi-meter-bar speech"></div>
                 </div>
@@ -542,7 +630,13 @@
 
               <article class="kpi-card clickable" data-register-kind="member" role="button" tabindex="0" aria-label="会員登録画面を開く">
                 <p class="kpi-label">会員人数</p>
-                <p class="kpi-value" id="memberCount">-</p>
+                <div class="kpi-value-row">
+                  <p class="kpi-value" id="memberCount">-</p>
+                  <div class="kpi-side-meta">
+                    <p class="kpi-shortage" id="memberShortage">不足 --</p>
+                    <p class="kpi-daily" id="memberDaily">1日 --</p>
+                  </div>
+                </div>
                 <div class="kpi-meter" aria-hidden="true">
                   <div id="memberBar" class="kpi-meter-bar member"></div>
                 </div>
@@ -790,6 +884,10 @@
       const setKpiTile = ({ key, current, target, unit = "count" }) => {
         const countEl = document.getElementById(`${key}Count`);
         const barEl = document.getElementById(`${key}Bar`);
+        const shortageEl = document.getElementById(`${key}Shortage`);
+        const dailyEl = document.getElementById(`${key}Daily`);
+        const remainingDays = Number(daysLeft);
+        const hasRemainingDays = Number.isFinite(remainingDays) && remainingDays > 0;
 
         if (!countEl || !barEl) {
           return;
@@ -808,8 +906,48 @@
 
         if (!Number.isFinite(target) || target <= 0) {
           barEl.style.width = "8%";
+          if (shortageEl) {
+            shortageEl.textContent = "不足 --";
+          }
+          if (dailyEl) {
+            dailyEl.textContent = "1日 --";
+          }
           setGoalPercentTrend(`${key}Trend`, current, target);
           return;
+        }
+
+        const shortage = Math.max(0, target - current);
+        let shortageLabel = "--";
+        let dailyLabel = "--";
+
+        if (shortageEl) {
+          if (unit === "hours") {
+            const rounded = Math.round(shortage * 10) / 10;
+            shortageLabel = `${Number.isInteger(rounded) ? rounded.toFixed(0) : rounded.toFixed(1)}時間`;
+          } else if (unit === "people") {
+            shortageLabel = `${Math.round(shortage).toLocaleString("ja-JP")}名`;
+          } else {
+            shortageLabel = `${Math.round(shortage).toLocaleString("ja-JP")}件`;
+          }
+
+          if (hasRemainingDays) {
+            if (unit === "hours") {
+              const perDayHour = Math.ceil((shortage / remainingDays) * 10) / 10;
+              dailyLabel = `${Number.isInteger(perDayHour) ? perDayHour.toFixed(0) : perDayHour.toFixed(1)}時間`;
+            } else if (unit === "people") {
+              const perDayPeople = Math.ceil(shortage / remainingDays);
+              dailyLabel = `${Math.max(0, perDayPeople).toLocaleString("ja-JP")}名`;
+            } else {
+              const perDayCount = Math.ceil(shortage / remainingDays);
+              dailyLabel = `${Math.max(0, perDayCount).toLocaleString("ja-JP")}件`;
+            }
+          }
+
+          shortageEl.textContent = `不足 ${shortageLabel}`;
+        }
+
+        if (dailyEl) {
+          dailyEl.textContent = `1日 ${dailyLabel}`;
         }
 
         const percent = Math.max(0, Math.round((current / target) * 100));
@@ -937,6 +1075,12 @@
           candidatePhotoUrl,
           greetingCount: String(currentMetrics.greeting),
         });
+
+      const volunteerRecruitBtn = document.getElementById("openVolunteerRecruitBtn");
+      if (volunteerRecruitBtn) {
+        const volunteerParams = buildRegisterParams();
+        volunteerRecruitBtn.href = `volunteer-recruitment.html?${volunteerParams.toString()}`;
+      }
 
       const openRegisterPage = (kind) => {
         if (kind === "member") {

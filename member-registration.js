@@ -12,6 +12,7 @@ const openAddMemberBtn = document.getElementById("openAddMemberBtn");
 const cancelMemberBtn = document.getElementById("cancelMemberBtn");
 const memberFormPanel = document.getElementById("memberFormPanel");
 const memberForm = document.getElementById("memberForm");
+const memberRoleInput = document.getElementById("memberRoleInput");
 const memberNameInput = document.getElementById("memberNameInput");
 const memberAddressInput = document.getElementById("memberAddressInput");
 const memberMobileInput = document.getElementById("memberMobileInput");
@@ -41,6 +42,7 @@ function hideNote() {
 }
 
 function clearForm() {
+  memberRoleInput.value = "使用者";
   memberNameInput.value = "";
   memberAddressInput.value = "";
   memberMobileInput.value = "";
@@ -70,6 +72,7 @@ function openEditPanel(member) {
   hideNote();
 
   memberNameInput.value = member.name ?? "";
+  memberRoleInput.value = member.role_type ?? "使用者";
   memberAddressInput.value = member.address ?? "";
   memberMobileInput.value = member.mobile ?? "";
   memberEmailInput.value = member.email ?? "";
@@ -149,6 +152,7 @@ function renderMemberList(rows) {
       (row) => `
         <article class="member-item" data-member-id="${row.id}">
           <strong>${row.name}</strong>
+          <span>区分: ${row.role_type ?? "使用者"}</span>
           <span>住所: ${row.address}</span>
           <span>携帯: ${row.mobile}</span>
           <span>メール: ${row.email}</span>
@@ -172,10 +176,20 @@ function renderMemberList(rows) {
 }
 
 async function loadMemberList() {
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from(MEMBER_TABLE)
-    .select("id, name, address, mobile, email, line_id, photo_url")
+    .select("id, name, role_type, address, mobile, email, line_id, photo_url")
     .order("created_at", { ascending: false });
+
+  // Backward compatible read for environments where role_type is not migrated yet.
+  if (error && error.message.includes("members.role_type does not exist")) {
+    const fallback = await supabase
+      .from(MEMBER_TABLE)
+      .select("id, name, address, mobile, email, line_id, photo_url")
+      .order("created_at", { ascending: false });
+    data = (fallback.data ?? []).map((row) => ({ ...row, role_type: "使用者" }));
+    error = fallback.error;
+  }
 
   if (error) {
     memberListNote.textContent = `メンバー一覧取得に失敗しました: ${error.message}`;
@@ -244,11 +258,17 @@ memberForm.addEventListener("submit", (event) => {
     try {
       const payload = {
         name: memberNameInput.value.trim(),
+        role_type: memberRoleInput.value,
         address: memberAddressInput.value.trim(),
         mobile: memberMobileInput.value.trim(),
         email: memberEmailInput.value.trim(),
         line_id: memberLineIdInput.value.trim(),
       };
+
+      if (payload.role_type !== "管理者" && payload.role_type !== "使用者") {
+        showNote("区分を選択してください。");
+        return;
+      }
 
       if (selectedMember) {
         const { error: updateError } = await supabase
@@ -257,6 +277,10 @@ memberForm.addEventListener("submit", (event) => {
           .eq("id", selectedMember.id);
 
         if (updateError) {
+          if (updateError.message.includes("members.role_type does not exist")) {
+            showNote("DBに区分カラムが未反映です。supabase.sqlを実行してください。");
+            return;
+          }
           showNote(`保存に失敗しました: ${updateError.message}`);
           return;
         }
@@ -281,6 +305,10 @@ memberForm.addEventListener("submit", (event) => {
           .single();
 
         if (insertError) {
+          if (insertError.message.includes("members.role_type does not exist")) {
+            showNote("DBに区分カラムが未反映です。supabase.sqlを実行してください。");
+            return;
+          }
           showNote(`保存に失敗しました: ${insertError.message}`);
           return;
         }

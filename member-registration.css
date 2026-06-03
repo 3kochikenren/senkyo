@@ -171,7 +171,8 @@ h1 {
   color: #4b3f2f;
 }
 
-.member-form input {
+.member-form input,
+.member-form select {
   width: 100%;
   border: 1px solid #dcc9a9;
   border-radius: 14px;
@@ -180,7 +181,8 @@ h1 {
   background: #fffdfa;
 }
 
-.member-form input:focus {
+.member-form input:focus,
+.member-form select:focus {
   border-color: #b98a46;
 }
 

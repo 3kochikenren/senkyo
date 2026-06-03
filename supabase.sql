@@ -29,6 +29,7 @@ create policy "Allow public select" on public.volunteer_applications
 create table if not exists public.members (
   id bigint generated always as identity primary key,
   created_at timestamptz not null default now(),
+  role_type text not null default '使用者' check (role_type in ('管理者', '使用者')),
   name text not null,
   address text not null,
   mobile text not null,
@@ -37,7 +38,22 @@ create table if not exists public.members (
 );
 
 alter table public.members
+  add column if not exists role_type text not null default '使用者',
   add column if not exists photo_url text;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'members_role_type_check'
+  ) then
+    alter table public.members
+      add constraint members_role_type_check
+      check (role_type in ('管理者', '使用者'));
+  end if;
+end
+$$;
 
 alter table public.members enable row level security;
 
