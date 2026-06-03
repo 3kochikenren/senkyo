@@ -121,6 +121,7 @@
       }
 
       .left-panel {
+        position: relative;
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(251, 244, 234, 0.94) 100%),
           radial-gradient(circle at 24% 18%, var(--danger-soft), transparent 36%);
@@ -238,6 +239,13 @@
         gap: 10px;
       }
 
+      .district-meta {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        min-width: 0;
+      }
+
       .district {
         margin: 0;
         font-size: 2.45rem;
@@ -257,6 +265,31 @@
         color: var(--muted);
         font-size: 0.74rem;
         letter-spacing: 0.08em;
+      }
+
+      .vote-target {
+        margin: 0;
+        color: #3f3a30;
+        position: absolute;
+        top: 20px;
+        right: 18px;
+        text-align: right;
+      }
+
+      .vote-target-label {
+        margin: 0;
+        font-size: 0.92rem;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+
+      .vote-target-value {
+        margin: 2px 0 0;
+        font-size: 2.3rem;
+        font-weight: 900;
+        line-height: 0.95;
+        letter-spacing: -0.03em;
+        white-space: nowrap;
       }
 
       .portrait-wrap {
@@ -508,6 +541,16 @@
           gap: 2px;
         }
 
+        .district-meta {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        .vote-target {
+          position: static;
+          margin-top: 4px;
+        }
+
         .days-value {
           font-size: 4.6rem;
         }
@@ -545,8 +588,14 @@
           <div class="board-grid">
             <section class="panel left-panel">
               <div class="district-line">
-                <h1 class="district" id="districtName">選挙区</h1>
-                <span class="election-type" id="electionType">-</span>
+                <div class="district-meta">
+                  <h1 class="district" id="districtName">選挙区</h1>
+                  <span class="election-type" id="electionType">-</span>
+                </div>
+                <div class="vote-target" id="voteTarget">
+                  <p class="vote-target-label">得票目標</p>
+                  <p class="vote-target-value" id="voteTargetValue">--</p>
+                </div>
               </div>
               <div class="meta-row">
                 <p class="meta-item" id="votingDate">投票日 -</p>
@@ -845,7 +894,7 @@
           const { data, error } = await supabase
             .from(SUPABASE_CANDIDATE_TABLE)
             .select(
-              "posting_target, greeting_target, street_standing_target, double_poster_target, street_speech_hours_target"
+              "posting_target, greeting_target, street_standing_target, double_poster_target, street_speech_hours_target, vote_target"
             )
             .eq("id", numericTileId)
             .limit(1)
@@ -877,7 +926,7 @@
         const { data } = await supabase
           .from(SUPABASE_CANDIDATE_TABLE)
           .select(
-            "posting_target, greeting_target, street_standing_target, double_poster_target, street_speech_hours_target"
+            "posting_target, greeting_target, street_standing_target, double_poster_target, street_speech_hours_target, vote_target"
           )
           .eq("district_id", district.id)
           .eq("member_id", member.id)
@@ -1007,6 +1056,21 @@
         doublePoster: 0,
         speech: 0,
         member: 0,
+        vote: 0,
+      };
+
+      const renderVoteTarget = () => {
+        const voteTargetValueEl = document.getElementById("voteTargetValue");
+        if (!voteTargetValueEl) {
+          return;
+        }
+
+        if (!Number.isFinite(targetMetrics.vote) || targetMetrics.vote <= 0) {
+          voteTargetValueEl.textContent = "--";
+          return;
+        }
+
+        voteTargetValueEl.textContent = `${Math.round(targetMetrics.vote).toLocaleString("ja-JP")}`;
       };
 
       const renderAllKpis = () => {
@@ -1049,6 +1113,7 @@
       };
 
       renderAllKpis();
+      renderVoteTarget();
 
       void (async () => {
         const [dbPostingCount, dbOtherCounts, candidateTargets, memberCount] = await Promise.all([
@@ -1075,6 +1140,7 @@
           targetMetrics.standing = Number(candidateTargets.street_standing_target) || 0;
           targetMetrics.doublePoster = Number(candidateTargets.double_poster_target) || 0;
           targetMetrics.speech = Number(candidateTargets.street_speech_hours_target) || 0;
+          targetMetrics.vote = Number(candidateTargets.vote_target) || 0;
         }
 
         if (memberCount !== null) {
@@ -1082,6 +1148,7 @@
         }
 
         renderAllKpis();
+        renderVoteTarget();
       })();
 
       const buildRegisterParams = () =>
