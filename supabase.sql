@@ -308,6 +308,102 @@ create policy "Allow public delete supporter members" on public.supporter_member
   to anon
   using (true);
 
+create table if not exists public.volunteer_recruitment_requests (
+  id bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  district_name text not null,
+  candidate_name text not null,
+  participant_member_id bigint references public.members (id) on delete restrict,
+  participant_name text not null,
+  notification_date date,
+  voting_date date,
+  memo text
+);
+
+create index if not exists volunteer_recruitment_requests_member_idx
+  on public.volunteer_recruitment_requests (participant_member_id);
+
+create index if not exists volunteer_recruitment_requests_candidate_idx
+  on public.volunteer_recruitment_requests (district_name, candidate_name);
+
+create index if not exists volunteer_recruitment_requests_created_at_idx
+  on public.volunteer_recruitment_requests (created_at desc);
+
+alter table public.volunteer_recruitment_requests enable row level security;
+
+drop policy if exists "Allow public insert volunteer recruitment requests" on public.volunteer_recruitment_requests;
+create policy "Allow public insert volunteer recruitment requests" on public.volunteer_recruitment_requests
+  for insert
+  to anon
+  with check (true);
+
+drop policy if exists "Allow public select volunteer recruitment requests" on public.volunteer_recruitment_requests;
+create policy "Allow public select volunteer recruitment requests" on public.volunteer_recruitment_requests
+  for select
+  to anon
+  using (true);
+
+drop policy if exists "Allow public update volunteer recruitment requests" on public.volunteer_recruitment_requests;
+create policy "Allow public update volunteer recruitment requests" on public.volunteer_recruitment_requests
+  for update
+  to anon
+  using (true)
+  with check (true);
+
+drop policy if exists "Allow public delete volunteer recruitment requests" on public.volunteer_recruitment_requests;
+create policy "Allow public delete volunteer recruitment requests" on public.volunteer_recruitment_requests
+  for delete
+  to anon
+  using (true);
+
+create table if not exists public.volunteer_recruitment_slots (
+  id bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  request_id bigint not null references public.volunteer_recruitment_requests (id) on delete cascade,
+  phase text not null check (phase in ('political', 'election', 'air', 'office')),
+  task_name text not null,
+  activity_date date not null,
+  start_time time not null,
+  end_time time not null,
+  check (end_time > start_time)
+);
+
+create index if not exists volunteer_recruitment_slots_request_idx
+  on public.volunteer_recruitment_slots (request_id);
+
+create index if not exists volunteer_recruitment_slots_activity_date_idx
+  on public.volunteer_recruitment_slots (activity_date);
+
+create index if not exists volunteer_recruitment_slots_phase_task_idx
+  on public.volunteer_recruitment_slots (phase, task_name);
+
+alter table public.volunteer_recruitment_slots enable row level security;
+
+drop policy if exists "Allow public insert volunteer recruitment slots" on public.volunteer_recruitment_slots;
+create policy "Allow public insert volunteer recruitment slots" on public.volunteer_recruitment_slots
+  for insert
+  to anon
+  with check (true);
+
+drop policy if exists "Allow public select volunteer recruitment slots" on public.volunteer_recruitment_slots;
+create policy "Allow public select volunteer recruitment slots" on public.volunteer_recruitment_slots
+  for select
+  to anon
+  using (true);
+
+drop policy if exists "Allow public update volunteer recruitment slots" on public.volunteer_recruitment_slots;
+create policy "Allow public update volunteer recruitment slots" on public.volunteer_recruitment_slots
+  for update
+  to anon
+  using (true)
+  with check (true);
+
+drop policy if exists "Allow public delete volunteer recruitment slots" on public.volunteer_recruitment_slots;
+create policy "Allow public delete volunteer recruitment slots" on public.volunteer_recruitment_slots
+  for delete
+  to anon
+  using (true);
+
 insert into storage.buckets (id, name, public)
 values ('member-photos', 'member-photos', true)
 on conflict (id) do nothing;

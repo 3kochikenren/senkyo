@@ -10,6 +10,10 @@
         --text: #1d1b16;
         --line: rgba(92, 73, 38, 0.16);
         --shadow: 0 18px 48px rgba(72, 54, 21, 0.08);
+        --accent: #d86a11;
+        --accent-strong: #b45309;
+        --panel: rgba(255, 255, 255, 0.9);
+        --muted: #6f624e;
       }
 
       * {
@@ -28,7 +32,7 @@
       }
 
       .page {
-        max-width: 980px;
+        max-width: 1200px;
         margin: 0 auto;
         padding: 24px 16px 40px;
       }
@@ -61,14 +65,15 @@
         margin-top: 16px;
         border: 1px solid var(--line);
         border-radius: 24px;
-        background: rgba(255, 255, 255, 0.86);
+        background: var(--panel);
         box-shadow: var(--shadow);
         padding: 20px;
       }
 
       .meta {
         display: grid;
-        gap: 8px;
+        grid-template-columns: repeat(3, minmax(120px, 1fr));
+        gap: 8px 16px;
         color: #5f5444;
       }
 
@@ -79,13 +84,153 @@
       .lead {
         margin: 14px 0 0;
         line-height: 1.7;
+        color: #4d4235;
       }
 
-      .actions {
+      .controls {
         margin-top: 16px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .field-label {
+        font-weight: 800;
+        color: #2f2a22;
+      }
+
+      .member-select {
+        width: 100%;
+        border: 1px solid rgba(31, 36, 48, 0.2);
+        border-radius: 12px;
+        background: #fff;
+        font-size: 1rem;
+        padding: 10px 12px;
+      }
+
+      .grid {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .section-card {
+        border: 1px solid rgba(92, 73, 38, 0.2);
+        border-radius: 16px;
+        background: #fff;
+        padding: 14px;
+      }
+
+      .section-head {
         display: flex;
+        align-items: baseline;
+        justify-content: space-between;
         gap: 10px;
         flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+
+      .section-title {
+        margin: 0;
+        font-size: 1.08rem;
+        font-weight: 800;
+        color: #28231c;
+      }
+
+      .section-period {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .task-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .task-row {
+        border: 1px solid rgba(92, 73, 38, 0.16);
+        border-radius: 12px;
+        padding: 10px;
+        background: #fffdf8;
+      }
+
+      .task-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .task-name {
+        margin: 0;
+        font-size: 0.96rem;
+        font-weight: 800;
+      }
+
+      .task-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #3e3529;
+        font-weight: 700;
+      }
+
+      .slots-wrap {
+        margin-top: 8px;
+        display: none;
+        gap: 8px;
+      }
+
+      .slots-wrap.active {
+        display: grid;
+      }
+
+      .slot-row {
+        display: grid;
+        grid-template-columns: minmax(140px, 1fr) 120px 120px auto;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .slot-input {
+        width: 100%;
+        border: 1px solid rgba(31, 36, 48, 0.2);
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 0.95rem;
+        background: #fff;
+      }
+
+      .slot-row .btn {
+        padding: 8px 12px;
+      }
+
+      .task-actions {
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      .preview {
+        margin-top: 16px;
+        border: 1px dashed rgba(92, 73, 38, 0.3);
+        border-radius: 14px;
+        background: #fffdf8;
+        padding: 12px;
+      }
+
+      .preview h2 {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .preview-output {
+        margin: 8px 0 0;
+        color: #4a4033;
+        line-height: 1.6;
       }
 
       .btn {
@@ -99,11 +244,46 @@
         color: #1f2430;
         background: #fff;
         font-weight: 700;
+        cursor: pointer;
       }
 
       .btn.primary {
-        background: linear-gradient(135deg, #1f2430 0%, #222d44 100%);
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
         color: #fff;
+        border-color: #c96112;
+      }
+
+      .actions {
+        margin-top: 16px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .chip {
+        display: inline-flex;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #f5ead8;
+        color: #5f4b32;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+        .meta {
+          grid-template-columns: 1fr;
+        }
+
+        .slot-row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .slot-row {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -120,31 +300,371 @@
           <div>候補者: <strong id="candidateName">-</strong></div>
           <div>投票日: <strong id="votingDate">-</strong></div>
         </div>
-        <p class="lead">このページでボランティア募集に関する案内を行います。必要に応じて応募フォームや募集要項を追加してください。</p>
+
+        <p class="lead">
+          参加者ごとに、タスク別の日付と時間を入力します。複数日を追加できるため、飛び石での参加申込にも対応できます。
+        </p>
+
+        <div class="controls">
+          <label class="field-label" for="participantSelect">参加者名（メンバーから選択）</label>
+          <select id="participantSelect" class="member-select">
+            <option value="">読み込み中...</option>
+          </select>
+        </div>
+
+        <div class="grid" id="volunteerSections"></div>
+
+        <section class="preview">
+          <h2>入力内容の確認</h2>
+          <div class="actions" style="margin-top: 10px;">
+            <button id="previewBtn" type="button" class="btn primary">入力内容を確認</button>
+          </div>
+          <div id="previewOutput" class="preview-output">まだ入力内容はありません。</div>
+        </section>
 
         <div class="actions">
           <a id="backToBoardBtn" class="btn" href="candidate-board.html">候補者ボードへ戻る</a>
-          <a class="btn primary" href="index.html">ポータルへ戻る</a>
+          <a class="btn" href="index.html">ポータルへ戻る</a>
         </div>
       </section>
     </main>
 
-    <script>
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+      const SUPABASE_URL = "https://ufwnepzbuqmhtifkilsk.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmd25lcHpidXFtaHRpZmtpbHNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzOTUxNzIsImV4cCI6MjA5NTk3MTE3Mn0.jkIuBUKqUGg2mx29VFLKImLxceElU7TdABtZVJGKt1E";
+      const SUPABASE_MEMBER_TABLE = "members";
+      const hasSupabaseConfig =
+        SUPABASE_URL !== "https://YOUR_PROJECT_ID.supabase.co" &&
+        SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY";
+      const supabase = hasSupabaseConfig ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
       const params = new URLSearchParams(window.location.search);
       const districtName = params.get("districtName") || "-";
       const candidateName = params.get("candidateName") || "-";
-      const votingDate = params.get("votingDate") || params.get("date") || "-";
+      const votingDateRaw = params.get("votingDate") || params.get("date") || "";
+      const notificationDateRaw = params.get("notificationDate") || "";
 
       const districtEl = document.getElementById("districtName");
       const candidateEl = document.getElementById("candidateName");
       const votingEl = document.getElementById("votingDate");
       if (districtEl) districtEl.textContent = districtName;
       if (candidateEl) candidateEl.textContent = candidateName;
-      if (votingEl) votingEl.textContent = votingDate;
+      if (votingEl) votingEl.textContent = votingDateRaw || "-";
+
+      const participantSelect = document.getElementById("participantSelect");
+      const sectionsContainer = document.getElementById("volunteerSections");
+      const previewBtn = document.getElementById("previewBtn");
+      const previewOutput = document.getElementById("previewOutput");
+
+      const parseIsoDate = (text) => {
+        if (!text) return null;
+        const date = new Date(`${text}T00:00:00`);
+        return Number.isNaN(date.getTime()) ? null : date;
+      };
+
+      const shiftDate = (date, days) => {
+        if (!date) return null;
+        const copy = new Date(date);
+        copy.setDate(copy.getDate() + days);
+        return copy;
+      };
+
+      const toYmd = (date) => {
+        if (!date) return "";
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+      };
+
+      const toJpDate = (date) => {
+        if (!date) return "-";
+        return `${date.getMonth() + 1}月${date.getDate()}日`;
+      };
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const notificationDate = parseIsoDate(notificationDateRaw);
+      const votingDate = parseIsoDate(votingDateRaw);
+      const notificationPrevDate = shiftDate(notificationDate, -1);
+      const votingPrevDate = shiftDate(votingDate, -1);
+
+      const sections = [
+        {
+          id: "political",
+          title: "①政治活動期間",
+          periodText: `（${toJpDate(today)}[今日]～${toJpDate(notificationPrevDate)}[告示日前日]）`,
+          minDate: toYmd(today),
+          maxDate: toYmd(notificationPrevDate),
+          tasks: ["ポスター貼り", "ポスティング", "挨拶訪問", "引き回し", "チラシ折り"],
+        },
+        {
+          id: "election",
+          title: "②選挙期間",
+          periodText: `（${toJpDate(notificationDate)}[告示日]～${toJpDate(votingPrevDate)}[投開票日前日]）`,
+          minDate: toYmd(notificationDate),
+          maxDate: toYmd(votingPrevDate),
+          tasks: ["ポスター貼り", "ドライバー", "ウグイス・カラス", "お手振り", "街宣同行", "証紙貼り", "電話掛け"],
+        },
+        {
+          id: "air",
+          title: "③空中戦",
+          periodText: "（任意の日程で入力）",
+          minDate: toYmd(today),
+          maxDate: toYmd(votingPrevDate),
+          tasks: ["SNS投稿", "SNS動画作成", "SNSバナー作成"],
+        },
+        {
+          id: "office",
+          title: "④事務方",
+          periodText: "（任意の日程で入力）",
+          minDate: toYmd(today),
+          maxDate: toYmd(votingPrevDate),
+          tasks: ["事務所留守番", "会計", "電話対応"],
+        },
+      ];
+
+      const slotTemplate = (minDate, maxDate) => {
+        const dateAttrs = [
+          minDate ? `min="${minDate}"` : "",
+          maxDate ? `max="${maxDate}"` : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
+
+        return `
+          <div class="slot-row">
+            <input class="slot-input" type="date" ${dateAttrs} />
+            <input class="slot-input" type="time" value="09:00" />
+            <input class="slot-input" type="time" value="12:00" />
+            <button type="button" class="btn slot-remove">削除</button>
+          </div>
+        `;
+      };
+
+      const renderSections = () => {
+        if (!sectionsContainer) {
+          return;
+        }
+
+        sectionsContainer.innerHTML = sections
+          .map((section) => {
+            const tasksHtml = section.tasks
+              .map(
+                (taskName) => `
+                  <div class="task-row" data-section-id="${section.id}" data-task-name="${taskName}">
+                    <div class="task-top">
+                      <p class="task-name">${taskName}</p>
+                      <label class="task-toggle">
+                        <input type="checkbox" class="task-check" />
+                        参加する
+                      </label>
+                    </div>
+                    <div class="slots-wrap"></div>
+                    <div class="task-actions" style="margin-top: 8px; display: none;">
+                      <button type="button" class="btn add-slot-btn">+ 日程を追加</button>
+                    </div>
+                  </div>
+                `
+              )
+              .join("");
+
+            return `
+              <section class="section-card" data-section-id="${section.id}" data-min-date="${section.minDate}" data-max-date="${section.maxDate}">
+                <div class="section-head">
+                  <h2 class="section-title">${section.title}</h2>
+                  <p class="section-period">${section.periodText}</p>
+                </div>
+                <div class="task-list">
+                  ${tasksHtml}
+                </div>
+              </section>
+            `;
+          })
+          .join("");
+      };
+
+      const addSlot = (taskRow) => {
+        const sectionCard = taskRow.closest(".section-card");
+        const slotsWrap = taskRow.querySelector(".slots-wrap");
+        if (!sectionCard || !slotsWrap) {
+          return;
+        }
+
+        const minDate = sectionCard.dataset.minDate || "";
+        const maxDate = sectionCard.dataset.maxDate || "";
+        slotsWrap.insertAdjacentHTML("beforeend", slotTemplate(minDate, maxDate));
+      };
+
+      const bindSectionEvents = () => {
+        if (!sectionsContainer) {
+          return;
+        }
+
+        sectionsContainer.addEventListener("change", (event) => {
+          const target = event.target;
+          if (!(target instanceof HTMLInputElement)) {
+            return;
+          }
+
+          if (!target.classList.contains("task-check")) {
+            return;
+          }
+
+          const taskRow = target.closest(".task-row");
+          if (!taskRow) {
+            return;
+          }
+
+          const slotsWrap = taskRow.querySelector(".slots-wrap");
+          const actions = taskRow.querySelector(".task-actions");
+          if (!slotsWrap || !actions) {
+            return;
+          }
+
+          if (target.checked) {
+            slotsWrap.classList.add("active");
+            actions.style.display = "flex";
+            if (slotsWrap.querySelectorAll(".slot-row").length === 0) {
+              addSlot(taskRow);
+            }
+            return;
+          }
+
+          slotsWrap.classList.remove("active");
+          actions.style.display = "none";
+          slotsWrap.innerHTML = "";
+        });
+
+        sectionsContainer.addEventListener("click", (event) => {
+          const target = event.target;
+          if (!(target instanceof HTMLElement)) {
+            return;
+          }
+
+          if (target.classList.contains("add-slot-btn")) {
+            const taskRow = target.closest(".task-row");
+            if (taskRow) {
+              addSlot(taskRow);
+            }
+            return;
+          }
+
+          if (target.classList.contains("slot-remove")) {
+            const slotRow = target.closest(".slot-row");
+            const slotsWrap = target.closest(".slots-wrap");
+            if (slotRow && slotsWrap) {
+              slotRow.remove();
+              if (slotsWrap.querySelectorAll(".slot-row").length === 0) {
+                const taskRow = slotsWrap.closest(".task-row");
+                const check = taskRow?.querySelector(".task-check");
+                if (check instanceof HTMLInputElement) {
+                  check.checked = false;
+                }
+                const actions = taskRow?.querySelector(".task-actions");
+                slotsWrap.classList.remove("active");
+                if (actions instanceof HTMLElement) {
+                  actions.style.display = "none";
+                }
+              }
+            }
+          }
+        });
+      };
+
+      const loadParticipants = async () => {
+        if (!(participantSelect instanceof HTMLSelectElement)) {
+          return;
+        }
+
+        if (!supabase) {
+          participantSelect.innerHTML = `<option value="">メンバー取得不可</option>`;
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from(SUPABASE_MEMBER_TABLE)
+          .select("id, name")
+          .order("name", { ascending: true });
+
+        if (error) {
+          participantSelect.innerHTML = `<option value="">メンバー取得に失敗</option>`;
+          return;
+        }
+
+        const options = [`<option value="">参加者を選択してください</option>`];
+        (data ?? []).forEach((member) => {
+          const id = String(member.id ?? "");
+          const name = String(member.name ?? "").trim();
+          if (!name) {
+            return;
+          }
+          options.push(`<option value="${id}">${name}</option>`);
+        });
+
+        if (options.length === 1 && candidateName !== "-") {
+          options.push(`<option value="candidate">${candidateName}</option>`);
+        }
+
+        participantSelect.innerHTML = options.join("");
+
+        if (candidateName && candidateName !== "-") {
+          const match = Array.from(participantSelect.options).find((opt) => opt.text === candidateName);
+          if (match) {
+            participantSelect.value = match.value;
+          }
+        }
+      };
+
+      const buildPreview = () => {
+        if (!(previewOutput instanceof HTMLElement) || !(participantSelect instanceof HTMLSelectElement)) {
+          return;
+        }
+
+        const participantLabel = participantSelect.selectedOptions[0]?.text || "未選択";
+        const lines = [`参加者: ${participantLabel}`];
+
+        const taskRows = sectionsContainer?.querySelectorAll(".task-row") ?? [];
+        taskRows.forEach((taskRow) => {
+          const taskName = taskRow.getAttribute("data-task-name") || "タスク";
+          const slotRows = taskRow.querySelectorAll(".slot-row");
+          if (slotRows.length === 0) {
+            return;
+          }
+
+          lines.push(`・${taskName}`);
+          slotRows.forEach((slotRow) => {
+            const dateInput = slotRow.querySelector('input[type="date"]');
+            const startInput = slotRow.querySelectorAll('input[type="time"]')[0];
+            const endInput = slotRow.querySelectorAll('input[type="time"]')[1];
+            const date = dateInput instanceof HTMLInputElement ? dateInput.value : "";
+            const start = startInput instanceof HTMLInputElement ? startInput.value : "";
+            const end = endInput instanceof HTMLInputElement ? endInput.value : "";
+            lines.push(`  - ${date || "日付未入力"} ${start || "--:--"}〜${end || "--:--"}`);
+          });
+        });
+
+        if (lines.length === 1) {
+          lines.push("まだタスク日程は入力されていません。");
+        }
+
+        previewOutput.textContent = lines.join("\n");
+      };
 
       const backBtn = document.getElementById("backToBoardBtn");
       if (backBtn) {
         backBtn.href = `candidate-board.html?${params.toString()}`;
+      }
+
+      renderSections();
+      bindSectionEvents();
+      void loadParticipants();
+
+      if (previewBtn) {
+        previewBtn.addEventListener("click", buildPreview);
       }
     </script>
   </body>
