@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>活動計画</title>
+    <style>
+      :root {
+        --line: rgba(92, 73, 38, 0.16);
+        --shadow: 0 18px 48px rgba(72, 54, 21, 0.08);
+        --text: #1d1b16;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(201, 138, 50, 0.24), transparent 28%),
+          radial-gradient(circle at top right, rgba(84, 103, 173, 0.18), transparent 26%),
+          linear-gradient(180deg, #f8f4ec 0%, #f2eadf 42%, #ece1d0 100%);
+      }
+
+      .page {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+      }
+
+      .topbar {
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        background: linear-gradient(135deg, #1f2430 0%, #222d44 100%);
+        color: #fff;
+        padding: 22px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        font-size: 0.72rem;
+        letter-spacing: 0.32em;
+        font-weight: 700;
+        color: rgba(255, 239, 208, 0.84);
+      }
+
+      .title {
+        margin: 8px 0 0;
+        font-size: clamp(1.8rem, 3vw, 3rem);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+
+      .title-link {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .card {
+        margin-top: 16px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: var(--shadow);
+        padding: 20px;
+      }
+
+      .meta {
+        display: grid;
+        gap: 8px;
+        color: #5f5444;
+      }
+
+      .meta strong {
+        color: #1f2430;
+      }
+
+      .lead {
+        margin: 14px 0 0;
+        line-height: 1.7;
+      }
+
+      .status {
+        margin-top: 14px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(92, 73, 38, 0.2);
+        background: #fffdf8;
+        color: #4a4033;
+      }
+
+      .status.error {
+        border-color: rgba(180, 35, 24, 0.35);
+        background: #fff3f2;
+        color: #8c1d18;
+      }
+
+      .daily-plan {
+        margin-top: 16px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .day-card {
+        border: 1px solid rgba(92, 73, 38, 0.2);
+        border-radius: 14px;
+        background: #fff;
+        padding: 12px;
+      }
+
+      .day-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 800;
+        color: #2f2a22;
+      }
+
+      .day-count {
+        margin: 4px 0 0;
+        color: #6a5d49;
+        font-size: 0.86rem;
+        font-weight: 700;
+      }
+
+      .plan-list {
+        margin-top: 10px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .plan-row {
+        border: 1px solid rgba(92, 73, 38, 0.14);
+        border-radius: 10px;
+        background: #fffdf8;
+        padding: 9px 10px;
+        display: grid;
+        grid-template-columns: 130px 1fr auto;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .plan-time {
+        font-weight: 800;
+        color: #1f2430;
+        font-size: 0.9rem;
+      }
+
+      .plan-task {
+        color: #3d3428;
+        font-weight: 700;
+      }
+
+      .plan-meta {
+        color: #6d5f4c;
+        font-size: 0.82rem;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 760px) {
+        .plan-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .actions {
+        margin-top: 16px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(31, 36, 48, 0.2);
+        border-radius: 999px;
+        padding: 10px 16px;
+        text-decoration: none;
+        color: #1f2430;
+        background: #fff;
+        font-weight: 700;
+      }
+
+      .btn.primary {
+        background: linear-gradient(135deg, #1f2430 0%, #222d44 100%);
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <p class="eyebrow">ELECTION CONTROL CENTER</p>
+        <h1 class="title"><a class="title-link" href="index.html">活動計画</a></h1>
+      </header>
+
+      <section class="card">
+        <div class="meta">
+          <div>選挙区: <strong id="districtName">-</strong></div>
+          <div>候補者: <strong id="candidateName">-</strong></div>
+          <div>告示日: <strong id="notificationDate">-</strong></div>
+          <div>投票日: <strong id="votingDate">-</strong></div>
+        </div>
+        <p class="lead">ボランティア募集で登録したデータを日別に表示します。</p>
+
+        <div id="planStatus" class="status">活動計画を読み込み中です...</div>
+        <section id="planContainer" class="daily-plan"></section>
+
+        <div class="actions">
+          <a id="backToBoardBtn" class="btn" href="candidate-board.html">候補者ボードへ戻る</a>
+          <a class="btn primary" href="index.html">ポータルへ戻る</a>
+        </div>
+      </section>
+    </main>
+
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+      const SUPABASE_URL = "https://ufwnepzbuqmhtifkilsk.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmd25lcHpidXFtaHRpZmtpbHNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzOTUxNzIsImV4cCI6MjA5NTk3MTE3Mn0.jkIuBUKqUGg2mx29VFLKImLxceElU7TdABtZVJGKt1E";
+      const SUPABASE_REQUEST_TABLE = "volunteer_recruitment_requests";
+      const SUPABASE_SLOT_TABLE = "volunteer_recruitment_slots";
+
+      const hasSupabaseConfig =
+        SUPABASE_URL !== "https://YOUR_PROJECT_ID.supabase.co" &&
+        SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY";
+      const supabase = hasSupabaseConfig ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+      const params = new URLSearchParams(window.location.search);
+      const districtName = params.get("districtName") || "-";
+      const candidateName = params.get("candidateName") || "-";
+      const notificationDate = params.get("notificationDate") || "-";
+      const votingDate = params.get("votingDate") || params.get("date") || "-";
+
+      const districtEl = document.getElementById("districtName");
+      const candidateEl = document.getElementById("candidateName");
+      const notificationEl = document.getElementById("notificationDate");
+      const votingEl = document.getElementById("votingDate");
+      const planStatus = document.getElementById("planStatus");
+      const planContainer = document.getElementById("planContainer");
+
+      if (districtEl) districtEl.textContent = districtName;
+      if (candidateEl) candidateEl.textContent = candidateName;
+      if (notificationEl) notificationEl.textContent = notificationDate;
+      if (votingEl) votingEl.textContent = votingDate;
+
+      const phaseLabelMap = {
+        political: "政治活動期間",
+        election: "選挙期間",
+        air: "空中戦",
+        office: "事務方",
+      };
+
+      const formatDateJa = (isoDate) => {
+        if (!isoDate) {
+          return "日付未設定";
+        }
+        const date = new Date(`${isoDate}T00:00:00`);
+        if (Number.isNaN(date.getTime())) {
+          return isoDate;
+        }
+        const weekday = ["日", "月", "火", "水", "木", "金", "土"][date.getDay()];
+        return `${date.getMonth() + 1}月${date.getDate()}日(${weekday})`;
+      };
+
+      const formatTimeJa = (timeText) => {
+        if (!timeText) {
+          return "--:--";
+        }
+        const parts = String(timeText).split(":");
+        if (parts.length < 2) {
+          return String(timeText);
+        }
+        return `${parts[0]}:${parts[1]}`;
+      };
+
+      const setStatus = (message, isError = false) => {
+        if (!(planStatus instanceof HTMLElement)) {
+          return;
+        }
+        planStatus.textContent = message;
+        planStatus.classList.toggle("error", isError);
+      };
+
+      const renderDailyPlans = (rows) => {
+        if (!(planContainer instanceof HTMLElement)) {
+          return;
+        }
+
+        if (!rows || rows.length === 0) {
+          planContainer.innerHTML = "";
+          setStatus("活動計画はまだ登録されていません。", false);
+          return;
+        }
+
+        const grouped = new Map();
+        rows.forEach((row) => {
+          const key = row.activity_date || "0000-00-00";
+          if (!grouped.has(key)) {
+            grouped.set(key, []);
+          }
+          grouped.get(key).push(row);
+        });
+
+        const sortedDates = Array.from(grouped.keys()).sort((a, b) => (a > b ? 1 : -1));
+
+        planContainer.innerHTML = sortedDates
+          .map((dateKey) => {
+            const dayRows = grouped.get(dateKey) || [];
+            const sortedRows = dayRows.sort((a, b) => {
+              const left = `${a.start_time || ""}${a.participant_name || ""}`;
+              const right = `${b.start_time || ""}${b.participant_name || ""}`;
+              return left.localeCompare(right, "ja");
+            });
+
+            const rowHtml = sortedRows
+              .map((item) => {
+                const phaseLabel = phaseLabelMap[item.phase] || item.phase || "区分未設定";
+                return `
+                  <article class="plan-row">
+                    <div class="plan-time">${formatTimeJa(item.start_time)}〜${formatTimeJa(item.end_time)}</div>
+                    <div class="plan-task">${item.task_name || "タスク未設定"}</div>
+                    <div class="plan-meta">${phaseLabel} / ${item.participant_name || "参加者未設定"}</div>
+                  </article>
+                `;
+              })
+              .join("");
+
+            return `
+              <section class="day-card">
+                <h2 class="day-title">${formatDateJa(dateKey)}</h2>
+                <p class="day-count">${sortedRows.length}件</p>
+                <div class="plan-list">${rowHtml}</div>
+              </section>
+            `;
+          })
+          .join("");
+
+        setStatus(`活動計画を ${rows.length} 件読み込みました。`, false);
+      };
+
+      const loadDailyPlans = async () => {
+        if (!supabase) {
+          setStatus("Supabase設定が未完了のため、活動計画を表示できません。", true);
+          return;
+        }
+
+        const requestQuery = supabase
+          .from(SUPABASE_REQUEST_TABLE)
+          .select("id, participant_name")
+          .eq("district_name", districtName)
+          .eq("candidate_name", candidateName)
+          .order("created_at", { ascending: false });
+
+        const { data: requestRows, error: requestError } = await requestQuery;
+        if (requestError) {
+          setStatus(`活動計画の取得に失敗しました: ${requestError.message}`, true);
+          return;
+        }
+
+        const requests = requestRows ?? [];
+        if (requests.length === 0) {
+          renderDailyPlans([]);
+          return;
+        }
+
+        const requestMap = new Map(requests.map((item) => [Number(item.id), item.participant_name || ""]));
+        const requestIds = Array.from(requestMap.keys());
+
+        const { data: slotRows, error: slotError } = await supabase
+          .from(SUPABASE_SLOT_TABLE)
+          .select("request_id, phase, task_name, activity_date, start_time, end_time")
+          .in("request_id", requestIds)
+          .order("activity_date", { ascending: true })
+          .order("start_time", { ascending: true });
+
+        if (slotError) {
+          setStatus(`日別データの取得に失敗しました: ${slotError.message}`, true);
+          return;
+        }
+
+        const rows = (slotRows ?? []).map((slot) => ({
+          ...slot,
+          participant_name: requestMap.get(Number(slot.request_id)) || "",
+        }));
+
+        renderDailyPlans(rows);
+      };
+
+      const backBtn = document.getElementById("backToBoardBtn");
+      if (backBtn) {
+        backBtn.href = `candidate-board.html?${params.toString()}`;
+      }
+
+      void loadDailyPlans();
+    </script>
+  </body>
+</html>

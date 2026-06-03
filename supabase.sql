@@ -131,6 +131,7 @@ alter table public.election_candidates
   add column if not exists official_approval_date date,
   add column if not exists population integer check (population >= 0),
   add column if not exists households integer check (households >= 0),
+  add column if not exists vote_target integer check (vote_target >= 0),
   add column if not exists posting_target integer check (posting_target >= 0),
   add column if not exists greeting_target integer check (greeting_target >= 0),
   add column if not exists street_standing_target integer check (street_standing_target >= 0),

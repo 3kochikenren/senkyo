@@ -18,6 +18,7 @@ const candidateActivityStartDate = document.getElementById("candidateActivitySta
 const candidateOfficialApprovalDate = document.getElementById("candidateOfficialApprovalDate");
 const candidatePopulation = document.getElementById("candidatePopulation");
 const candidateHouseholds = document.getElementById("candidateHouseholds");
+const candidateVoteTarget = document.getElementById("candidateVoteTarget");
 const candidatePostingTarget = document.getElementById("candidatePostingTarget");
 const candidateGreetingTarget = document.getElementById("candidateGreetingTarget");
 const candidateStreetStandingTarget = document.getElementById("candidateStreetStandingTarget");
@@ -78,6 +79,7 @@ function openCreatePanel() {
   candidateOfficialApprovalDate.value = "";
   candidatePopulation.value = "";
   candidateHouseholds.value = "";
+  candidateVoteTarget.value = "";
   candidatePostingTarget.value = "";
   candidateGreetingTarget.value = "";
   candidateStreetStandingTarget.value = "";
@@ -98,6 +100,7 @@ function openEditPanel(candidate) {
   candidateOfficialApprovalDate.value = candidate.official_approval_date ?? "";
   candidatePopulation.value = candidate.population ?? "";
   candidateHouseholds.value = candidate.households ?? "";
+  candidateVoteTarget.value = candidate.vote_target ?? "";
   candidatePostingTarget.value = candidate.posting_target ?? "";
   candidateGreetingTarget.value = candidate.greeting_target ?? "";
   candidateStreetStandingTarget.value = candidate.street_standing_target ?? "";
@@ -121,6 +124,7 @@ function closePanel() {
   candidateOfficialApprovalDate.value = "";
   candidatePopulation.value = "";
   candidateHouseholds.value = "";
+  candidateVoteTarget.value = "";
   candidatePostingTarget.value = "";
   candidateGreetingTarget.value = "";
   candidateStreetStandingTarget.value = "";
@@ -220,7 +224,7 @@ async function loadCandidateList() {
   const { data, error } = await supabase
     .from(CANDIDATE_TABLE)
     .select(
-      "id, district_id, member_id, created_at, activity_start_date, official_approval_date, population, households, posting_target, greeting_target, street_standing_target, double_poster_target, street_speech_hours_target"
+      "id, district_id, member_id, created_at, activity_start_date, official_approval_date, population, households, vote_target, posting_target, greeting_target, street_standing_target, double_poster_target, street_speech_hours_target"
     )
     .order("created_at", { ascending: false });
 
@@ -267,6 +271,7 @@ candidateForm.addEventListener("submit", (event) => {
     const officialApprovalDate = toNullableDate(candidateOfficialApprovalDate.value);
     const population = toNullableNumber(candidatePopulation.value);
     const households = toNullableNumber(candidateHouseholds.value);
+    const voteTarget = toNullableNumber(candidateVoteTarget.value);
     const postingTarget = toNullableNumber(candidatePostingTarget.value);
     const greetingTarget = toNullableNumber(candidateGreetingTarget.value);
     const streetStandingTarget = toNullableNumber(candidateStreetStandingTarget.value);
@@ -276,6 +281,7 @@ candidateForm.addEventListener("submit", (event) => {
     const numericValues = [
       population,
       households,
+      voteTarget,
       postingTarget,
       greetingTarget,
       streetStandingTarget,
@@ -305,6 +311,7 @@ candidateForm.addEventListener("submit", (event) => {
       official_approval_date: officialApprovalDate,
       population: population,
       households: households,
+      vote_target: voteTarget,
       posting_target: postingTarget,
       greeting_target: greetingTarget,
       street_standing_target: streetStandingTarget,
