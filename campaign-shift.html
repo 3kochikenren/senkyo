@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>活動シフト表</title>
+    <meta name="description" content="作業マスタ・人員・時間設定から活動シフト表を自動生成します。" />
+    <link rel="stylesheet" href="campaign-shift.css" />
+  </head>
+  <body>
+    <main class="shift-shell">
+      <header class="shift-header card">
+        <div>
+          <p class="eyebrow">Campaign Shift</p>
+          <h1>活動シフト表</h1>
+          <p>PCは表、スマホはタイムラインで見やすく管理します。</p>
+        </div>
+        <a class="back-btn" href="settings.html">設定へ戻る</a>
+      </header>
+
+      <section class="card controls-card">
+        <h2>時間枠設定</h2>
+        <form id="timeForm" class="control-grid">
+          <label>
+            <span>日付</span>
+            <input id="shiftDate" type="date" required />
+          </label>
+          <label>
+            <span>開始時間</span>
+            <input id="startTime" type="time" value="08:00" required />
+          </label>
+          <label>
+            <span>終了時間</span>
+            <input id="endTime" type="time" value="20:00" required />
+          </label>
+          <label>
+            <span>間隔（分）</span>
+            <select id="slotInterval">
+              <option value="15">15分</option>
+              <option value="30" selected>30分</option>
+              <option value="60">60分</option>
+            </select>
+          </label>
+          <div class="actions full-row">
+            <button id="generateBtn" type="submit">表を自動作成</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card controls-card">
+        <h2>作業マスタ</h2>
+        <form id="activityForm" class="activity-form">
+          <label>
+            <span>作業名</span>
+            <input id="activityName" type="text" placeholder="例: 挨拶回り" required />
+          </label>
+          <label>
+            <span>色</span>
+            <input id="activityColor" type="color" value="#f4e41b" />
+          </label>
+          <button type="submit">追加</button>
+        </form>
+        <div id="activityMasterList" class="activity-master-list"></div>
+      </section>
+
+      <section class="card controls-card">
+        <h2>人員設定（メンバー選択）</h2>
+        <p class="subtle">作業ごとに担当メンバーを選ぶと、列が自動で生成されます。</p>
+        <div id="assignmentMemberConfig" class="assignment-member-config"></div>
+      </section>
+
+      <section class="card view-card">
+        <div class="view-top">
+          <h2>シフト表示</h2>
+          <div class="view-switch" role="tablist" aria-label="表示切替">
+            <button type="button" id="tableModeBtn" class="mode-btn active" data-mode="table">表</button>
+            <button type="button" id="timelineModeBtn" class="mode-btn" data-mode="timeline">タイムライン</button>
+          </div>
+        </div>
+
+        <div id="viewNote" class="view-note">候補者を選択し、時間枠を作成してください。</div>
+
+        <div id="tableWrap" class="table-wrap">
+          <table id="shiftTable" class="shift-table"></table>
+        </div>
+
+        <div id="timelineWrap" class="timeline-wrap hidden"></div>
+      </section>
+    </main>
+
+    <script type="module" src="campaign-shift.js"></script>
+  </body>
+</html>
